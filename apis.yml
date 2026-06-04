@@ -1,0 +1,115 @@
+---
+aid: university-of-pittsburgh
+name: University of Pittsburgh
+description: >-
+  The University of Pittsburgh is a public research university in Pittsburgh,
+  Pennsylvania, United States, ranked #271 in the QS World University Rankings
+  2025. Its public developer and API footprint is partly institutional and
+  partly community-driven: the university co-operates the Western Pennsylvania
+  Regional Data Center (WPRDC), a CKAN-based open data portal, and hosts the
+  Project Tycho epidemiological data API. A widely used community Python
+  library, PittAPI, exposes course, dining, library and other campus data, and
+  the University Library System publishes an OAI-PMH feed from its
+  D-Scholarship institutional repository. The university maintains an official
+  GitHub organization plus several department/research-computing orgs.
+type: Index
+position: Consumer
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/university-of-pittsburgh/refs/heads/main/apis.yml
+tags:
+  - Education
+  - Higher Education
+  - University
+  - Open Data
+  - Research Data
+  - Library
+  - United States
+created: '2026-06-03'
+modified: '2026-06-03'
+specificationVersion: '0.19'
+apis:
+  - aid: university-of-pittsburgh:wprdc
+    name: Western Pennsylvania Regional Data Center (WPRDC) CKAN API
+    description: >-
+      WPRDC is an open data portal operated as a partnership between the
+      University of Pittsburgh, Allegheny County, and the City of Pittsburgh.
+      It runs on CKAN and exposes the standard CKAN Action API for searching
+      packages, reading dataset metadata, and querying tabular data via the
+      DataStore. Datasets cover government, civic, housing, traffic, and
+      health-related topics for the region.
+    humanURL: https://data.wprdc.org
+    baseURL: https://data.wprdc.org/api/3/action
+    tags: [ Open Data, CKAN, Civic Data, Regional Data ]
+    properties:
+      - type: Documentation
+        url: https://data.wprdc.org
+  - aid: university-of-pittsburgh:project-tycho
+    name: Project Tycho API
+    description: >-
+      Project Tycho, hosted at the University of Pittsburgh, provides
+      standardized global health and epidemiological surveillance data. Its
+      public API supports listing reference variables (conditions, countries,
+      pathogens, geographies) and querying datasets, returning results in CSV
+      and the Project Tycho data format. Use of the API requires a free API key
+      obtained from the user profile after registration.
+    humanURL: https://www.tycho.pitt.edu/dataset/api/
+    baseURL: https://www.tycho.pitt.edu/api
+    tags: [ Research Data, Health, Epidemiology, Public Health ]
+    properties:
+      - type: Documentation
+        url: https://www.tycho.pitt.edu/dataset/api/
+      - type: SignUp
+        url: https://www.tycho.pitt.edu
+  - aid: university-of-pittsburgh:pittapi
+    name: PittAPI (community)
+    description: >-
+      PittAPI is an unofficial, community-maintained Python library (developed
+      by the Pitt Computer Science Club) that retrieves data from University of
+      Pittsburgh sources, including courses, dining, library, news, laundry,
+      computer labs, shuttle routes, the people directory, and textbooks. It is
+      distributed on PyPI and licensed under GPLv2.
+    humanURL: https://github.com/pittcsc/PittAPI
+    tags: [ Courses, Campus Data, Library, Python, Community ]
+    properties:
+      - type: Documentation
+        url: https://github.com/pittcsc/PittAPI
+      - type: GitHub
+        url: https://github.com/pittcsc/PittAPI
+      - type: SourceCode
+        url: https://pypi.org/project/PittAPI/
+  - aid: university-of-pittsburgh:d-scholarship-oai
+    name: D-Scholarship@Pitt OAI-PMH
+    description: >-
+      D-Scholarship@Pitt is the University Library System's institutional
+      repository of research and scholarly output. It exposes an OAI-PMH
+      metadata harvesting endpoint for programmatic access to repository
+      records. Live HTTP probing returned a 403 from an automated client,
+      indicating bot protection rather than a missing endpoint; verify
+      interactively.
+    humanURL: https://d-scholarship.pitt.edu
+    baseURL: https://d-scholarship.pitt.edu/cgi/oai2
+    tags: [ Institutional Repository, OAI-PMH, Library, Research Data ]
+    properties:
+      - type: Documentation
+        url: https://d-scholarship.pitt.edu
+common:
+  - type: Website
+    url: https://www.pitt.edu
+  - type: GitHub
+    url: https://github.com/University-of-Pittsburgh
+  - type: LinkedIn
+    url: https://www.linkedin.com/school/university-of-pittsburgh/
+  - type: SourceCode
+    url: https://github.com/ulsdevteam
+  - type: Plans
+    url: plans/university-of-pittsburgh-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/university-of-pittsburgh-rate-limits.yml
+  - type: FinOps
+    url: finops/university-of-pittsburgh-finops.yml
+  - type: Review
+    url: review.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

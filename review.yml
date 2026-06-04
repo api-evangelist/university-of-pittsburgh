@@ -1,0 +1,47 @@
+---
+name: University of Pittsburgh
+description: University of Pittsburgh public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/university-of-pittsburgh/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 3
+    summary: >-
+      Pitt has a moderate, mostly research- and community-driven API footprint
+      rather than a single official developer portal. Verified live: the WPRDC
+      CKAN open data portal and Action API, the Project Tycho health data API
+      (documented, API-key gated), the community PittAPI Python library on
+      GitHub/PyPI, and an official GitHub organization plus the library system
+      dev org. The D-Scholarship institutional repository OAI-PMH endpoint
+      returned 403 to an automated probe (bot protection, endpoint likely
+      live). No endpoints were fabricated; all baseURLs come from confirmed
+      documentation or live responses.
+    endpoints:
+      - url: https://data.wprdc.org/api/3/action/package_list
+        status: 200
+        note: WPRDC CKAN Action API live and returning data.
+      - url: https://www.tycho.pitt.edu/dataset/api/
+        status: 200
+        note: Project Tycho API documentation page resolves.
+      - url: https://www.tycho.pitt.edu/api/
+        status: 200
+        note: Project Tycho API base resolves; API key required for use.
+      - url: https://github.com/pittcsc/PittAPI
+        status: 200
+        note: Community PittAPI repo, active, on PyPI as PittAPI.
+      - url: https://github.com/University-of-Pittsburgh
+        status: 200
+        note: Official Pitt GitHub organization exists.
+      - url: https://github.com/ulsdevteam
+        status: 200
+        note: University Library System dev team GitHub org.
+      - url: https://d-scholarship.pitt.edu/cgi/oai2
+        status: 403
+        note: OAI-PMH endpoint blocked automated client; verify interactively.
+      - url: https://www.pitt.edu
+        status: 200
+        note: Official university website.
+      - url: https://www.linkedin.com/school/university-of-pittsburgh/
+        status: 999
+        note: LinkedIn school page (999 is LinkedIn bot block, page is real).
