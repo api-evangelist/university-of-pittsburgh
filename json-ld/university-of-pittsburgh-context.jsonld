@@ -1,0 +1,80 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "pitt": "https://www.pitt.edu/vocab#",
+    "@vocab": "https://www.pitt.edu/vocab#",
+    "name": "schema:name",
+    "description": "schema:description",
+    "url": "schema:url",
+    "logo": "schema:logo",
+    "sameAs": "schema:sameAs",
+    "address": "schema:address",
+    "CollegeOrUniversity": "schema:CollegeOrUniversity",
+    "Dataset": "schema:Dataset",
+    "Organization": "schema:Organization",
+    "dataCatalog": {
+      "@id": "schema:dataset",
+      "@type": "@id"
+    },
+    "api": {
+      "@id": "pitt:api",
+      "@type": "@id"
+    },
+    "humanURL": {
+      "@id": "schema:url",
+      "@type": "@id"
+    },
+    "baseURL": {
+      "@id": "pitt:baseURL",
+      "@type": "@id"
+    },
+    "tags": "schema:keywords",
+    "WPRDC": {
+      "@id": "pitt:WesternPennsylvaniaRegionalDataCenter",
+      "@type": "schema:DataCatalog"
+    },
+    "package": {
+      "@id": "pitt:ckanPackage",
+      "@type": "schema:Dataset"
+    },
+    "resource": {
+      "@id": "pitt:ckanResource",
+      "@type": "schema:DataDownload"
+    },
+    "ProjectTycho": {
+      "@id": "pitt:ProjectTycho",
+      "@type": "schema:Dataset"
+    },
+    "condition": "pitt:condition",
+    "country": "pitt:country",
+    "pathogen": "pitt:pathogen",
+    "scholarshipRecord": {
+      "@id": "pitt:dScholarshipRecord",
+      "@type": "schema:ScholarlyArticle"
+    }
+  },
+  "@type": "CollegeOrUniversity",
+  "name": "University of Pittsburgh",
+  "url": "https://www.pitt.edu",
+  "description": "A public research university in Pittsburgh, Pennsylvania, United States. Its public developer and API footprint includes the Western Pennsylvania Regional Data Center (WPRDC) CKAN open data portal, the Project Tycho epidemiological data API, the community-maintained PittAPI Python library, and the D-Scholarship@Pitt OAI-PMH institutional repository feed.",
+  "sameAs": [
+    "https://github.com/University-of-Pittsburgh",
+    "https://github.com/ulsdevteam",
+    "https://www.linkedin.com/school/university-of-pittsburgh/"
+  ],
+  "dataCatalog": [
+    {
+      "@type": "WPRDC",
+      "name": "Western Pennsylvania Regional Data Center (WPRDC) CKAN API",
+      "url": "https://data.wprdc.org",
+      "baseURL": "https://data.wprdc.org/api/3/action"
+    },
+    {
+      "@type": "ProjectTycho",
+      "name": "Project Tycho API",
+      "url": "https://www.tycho.pitt.edu/dataset/api/",
+      "baseURL": "https://www.tycho.pitt.edu/api"
+    }
+  ]
+}
