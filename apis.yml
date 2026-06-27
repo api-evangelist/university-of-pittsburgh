@@ -59,7 +59,7 @@ apis:
     properties:
       - type: Documentation
         url: https://www.tycho.pitt.edu/dataset/api/
-      - type: SignUp
+      - type: Signup
         url: https://www.tycho.pitt.edu
   - aid: university-of-pittsburgh:pittapi
     name: PittAPI (community)
