@@ -4,12 +4,18 @@
     {
       "source": "https://www.pittwire.pitt.edu",
       "feed_url": "https://www.pittwire.pitt.edu",
-      "title": "Pittwire",
+      "title": "",
       "saved": 0,
-      "method": "none",
-      "error": "parse_failed"
+      "method": "none"
+    },
+    {
+      "source": "https://www.technology.pitt.edu/help",
+      "feed_url": "https://www.technology.pitt.edu/help",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
   "post_count": 0,
-  "fetched": "2026-08-22T20:08:02Z"
+  "fetched": "2026-08-30T22:33:40Z"
 }
