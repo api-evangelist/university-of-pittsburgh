@@ -309,6 +309,9 @@ apis:
   - type: Package
     url: https://pypi.org/project/PittAPI/
 common:
+- type: License
+  name: GPL-2.0
+  url: https://github.com/pittcsc/PittAPI/blob/dev/LICENSE
 - type: Website
   url: https://www.pitt.edu
 - type: Documentation
