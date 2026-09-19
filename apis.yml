@@ -205,6 +205,12 @@ apis:
   - OAI-PMH
   - Library
   - Research Data
+  - Tenants
+  tags_raw:
+  - Institutional Repository
+  - OAI-PMH
+  - Library
+  - Research Data
   - Tenant
   x-operator: tenant
   x-vendor: Hyku Commons (Samvera Hyku)
@@ -237,6 +243,13 @@ apis:
   - Library
   - Python
   - Student Built
+  - Tenants
+  tags_raw:
+  - Courses
+  - Campus Data
+  - Library
+  - Python
+  - Student Built
   - Tenant
   x-operator: tenant
   x-endorsement: unverified
@@ -256,6 +269,8 @@ apis:
   humanURL: https://www.tycho.pitt.edu/dataset/api/
   baseURL: https://www.tycho.pitt.edu/api
   tags:
+  - Data
+  tags_raw:
   - data
   properties:
   - type: OpenAPI
@@ -277,6 +292,8 @@ apis:
   humanURL: https://www.tycho.pitt.edu/dataset/api/
   baseURL: https://www.tycho.pitt.edu/api
   tags:
+  - Variables
+  tags_raw:
   - variables
   properties:
   - type: OpenAPI
