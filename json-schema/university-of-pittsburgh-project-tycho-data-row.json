@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/university-of-pittsburgh/refs/heads/main/json-schema/university-of-pittsburgh-project-tycho-data-row.json",
+  "title": "Project Tycho Pre-compiled Data Format v1.0 — surveillance row",
+  "description": "One row returned by GET https://www.tycho.pitt.edu/api/query, expressed as an object. The API returns CSV, not JSON; this schema describes the shape of a parsed row so that a client, agent or pipeline has a contract to validate against. Every property below is named in the University of Pittsburgh's own published API reference at https://www.tycho.pitt.edu/dataset/api/ as either a returned variable or a filterable variable. Types are string throughout because CSV is untyped on the wire and Project Tycho publishes no type declarations; the semantic type is given in each description instead.",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "https://www.tycho.pitt.edu/dataset/api/ (HTTP 200, 2026-08-30)",
+    "operator": "institution",
+    "authorship": "Written by API Evangelist, not published by the University of Pittsburgh. Project Tycho publishes no JSON Schema, no OpenAPI and no machine-readable data dictionary.",
+    "coverage": "The variables the published reference enumerates. The reference states that filtering is available on 'any of the variables included in the Project Tycho Format' without listing them exhaustively, so the format may carry further columns; those are deliberately absent here rather than guessed."
+  },
+  "type": "object",
+  "properties": {
+    "ConditionName": { "type": "string", "description": "Human-readable name of the notifiable condition, e.g. Measles. Case-sensitive." },
+    "ConditionSNOMED": { "type": "string", "description": "SNOMED CT concept identifier for the condition." },
+    "PathogenName": { "type": "string", "description": "Scientific name of the causative pathogen." },
+    "PathogenTaxonID": { "type": "string", "description": "NCBI Taxonomy identifier for the pathogen." },
+    "CountryISO": { "type": "string", "description": "ISO 3166-1 alpha-2 country code.", "pattern": "^[A-Z]{2}$" },
+    "CountryName": { "type": "string", "description": "Country name in Project Tycho's own casing, e.g. UNITED STATES OF AMERICA." },
+    "Admin1ISO": { "type": "string", "description": "ISO 3166-2 code for the first-level administrative division, e.g. US-PA." },
+    "Admin1Name": { "type": "string", "description": "Name of the first-level administrative division, e.g. Pennsylvania." },
+    "Admin2Name": { "type": "string", "description": "Name of the second-level administrative division — a US county or equivalent." },
+    "CityName": { "type": "string", "description": "Name of the city the count was reported for." },
+    "PeriodStartDate": { "type": "string", "format": "date", "description": "Start of the reporting period, YYYY-MM-DD." },
+    "PeriodEndDate": { "type": "string", "format": "date", "description": "End of the reporting period, YYYY-MM-DD." },
+    "PartOfCumulativeCountSeries": { "type": "string", "enum": ["0", "1"], "description": "1 if the row belongs to a cumulative count series, 0 if it is a period count." },
+    "AgeRange": { "type": "string", "description": "Age band the count applies to. Enumerable at GET /api/agerange." },
+    "Subpopulation": { "type": "string", "description": "Subpopulation the count applies to. Enumerable at GET /api/subpopulation." },
+    "PlaceOfAcqusition": { "type": "string", "description": "Where the infection was acquired. The misspelling is Project Tycho's own, in both the reference and the data format, and is reproduced verbatim because a client must send and read the term the API actually uses." },
+    "DiagnosisCertainty": { "type": "string", "description": "Certainty of the diagnosis behind the reported count. Enumerable at GET /api/diagnosiscertainty." },
+    "SourceName": { "type": "string", "description": "Agency or publication the count was reported by. Enumerable at GET /api/sourcename." },
+    "Fatalities": { "type": "string", "enum": ["0", "1"], "description": "1 if the count is of fatalities, 0 if not." }
+  },
+  "additionalProperties": true
+}

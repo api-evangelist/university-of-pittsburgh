@@ -1,0 +1,50 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live keyless probes of University of Pittsburgh surfaces on 2026-08-30. Each file below is the
+  verbatim response body returned by the URL named against it, saved unmodified except where noted.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+files:
+- file: university-of-pittsburgh-wprdc-ckan-status-show.json
+  method: probed
+  source: https://data.wprdc.org/api/3/action/status_show
+  status: 200
+  content_type: application/json
+  operator: institution
+  note: >-
+    Captured verbatim and pretty-printed. Establishes CKAN 2.11.6 with the local `wprdctheme`
+    extension — a locally operated and locally customised deployment, not a hosted tenancy.
+- file: university-of-pittsburgh-uls-oai-pmh-identify.xml
+  method: probed
+  source: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=Identify
+  status: 200
+  content_type: text/xml
+  operator: institution
+  note: >-
+    Captured verbatim. A conformant OAI-PMH 2.0 Identify response from the University Library
+    System's E-Journal Publishing platform on a pitt.edu host.
+- file: university-of-pittsburgh-pitt-passport-saml-metadata.xml
+  method: probed
+  source: https://passport.pitt.edu/idp/shibboleth
+  status: 200
+  content_type: application/xml
+  operator: institution
+  note: >-
+    Captured verbatim. Pitt Passport's SAML 2.0 IdP metadata, including the shibmd:Scope assertion
+    for pitt.edu. Contains only public signing and encryption certificates — no secret material.
+- file: university-of-pittsburgh-project-tycho-requests.json
+  method: searched
+  source: https://www.tycho.pitt.edu/dataset/api/
+  status: 200
+  operator: institution
+  note: >-
+    Request examples transcribed from Pitt's own published API reference, plus two observed error
+    responses. No Project Tycho response body is included, because every call requires a key.

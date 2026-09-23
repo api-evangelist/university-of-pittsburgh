@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/university-of-pittsburgh/refs/heads/main/json-schema/university-of-pittsburgh-wprdc-ckan-action-envelope.json",
+  "title": "WPRDC CKAN Action API response envelope",
+  "description": "The response envelope returned by every action under https://data.wprdc.org/api/3/action/. This is CKAN's contract, not the University of Pittsburgh's engineering — the schema is recorded here because it is what a caller of the Western Pennsylvania Regional Data Center actually receives, and it is explicitly attributed to CKAN so that Pitt is not credited with designing it. Derived from live keyless probes of status_show, package_search and package_list on 2026-08-30 against CKAN 2.11.6.",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Live keyless probes of https://data.wprdc.org/api/3/action/status_show, /package_search?rows=1 and /package_list on 2026-08-30, all HTTP 200 application/json.",
+    "operator": "institution",
+    "contract_designer": "CKAN (open source), not the University of Pittsburgh",
+    "authorship": "Written by API Evangelist. Neither WPRDC nor the University of Pittsburgh publishes a schema, OpenAPI or error reference for this deployment."
+  },
+  "type": "object",
+  "required": ["help", "success"],
+  "properties": {
+    "help": { "type": "string", "format": "uri", "description": "URL of the CKAN help_show action for the action just called. Present on both success and failure — the one genuinely self-describing element of the envelope." },
+    "success": { "type": "boolean", "description": "Whether the action succeeded. A search that matches nothing is success: true with an empty result set, not an error." },
+    "result": { "description": "The action's payload. Its shape is per-action: an object for status_show and package_show, an array of dataset names for package_list, an object with count and results[] for package_search." },
+    "error": {
+      "type": "object",
+      "description": "Present only when success is false.",
+      "properties": {
+        "__type": { "type": "string", "description": "CKAN's error class, e.g. \"Not Found Error\", \"Validation Error\", \"Authorization Error\"." },
+        "message": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

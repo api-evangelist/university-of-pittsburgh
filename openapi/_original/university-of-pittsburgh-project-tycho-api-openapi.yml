@@ -1,0 +1,542 @@
+openapi: 3.2.0
+info:
+  title: Project Tycho API
+  version: '1.0'
+  description: >-
+    Project Tycho is an open-access repository for global health surveillance data, built and
+    operated at the University of Pittsburgh and served from www.tycho.pitt.edu (136.142.8.172,
+    inside Pitt's own 136.142.0.0/16). The API is a single-host, query-parameter-driven read
+    surface: every endpoint is a GET under /api/, every response is CSV, and every call carries a
+    free API key in the `apikey` query parameter. Thirteen of the fourteen operations are variable
+    listings that enumerate the controlled values of one field of the Project Tycho Pre-compiled
+    Data Format version 1.0 (condition, country, admin1, admin2, city, pathogen, age range,
+    subpopulation, fatalities, cumulative, diagnosis certainty, place of acquisition, source name);
+    the fourteenth, /query, returns the surveillance rows themselves, filtered on any variable in
+    that format. The site is developed and maintained for Project Tycho by the MIDAS Coordination
+    Center under NIH/NIGMS grant R24GM153920 and is copyright University of Pittsburgh.
+    Pitt publishes no OpenAPI, JSON Schema or other machine-readable contract for this API; this
+    document was written by API Evangelist from the published API reference and from live probes.
+  termsOfService: https://www.tycho.pitt.edu/dataset/api/
+  contact:
+    name: Project Tycho — University of Pittsburgh
+    email: tycho@phdl.pitt.edu
+    url: https://www.tycho.pitt.edu/about/
+  license:
+    name: Open access — see Project Tycho data use terms
+    url: https://www.tycho.pitt.edu/about/
+  x-operator: institution
+  x-operator-evidence: >-
+    servers[] www.tycho.pitt.edu is a host under the University of Pittsburgh's own registrable
+    domain, pitt.edu, and resolves to 136.142.8.172 — inside Pitt's own 136.142.0.0/16 address
+    space, not a vendor's. The site footer reads "© 2026 University of Pittsburgh"; the published
+    contact address is tycho@phdl.pitt.edu (Public Health Dynamics Laboratory, Pitt School of
+    Public Health); and the API reference at https://www.tycho.pitt.edu/dataset/api/ is served
+    from the same host. No vendor host, vendor contact, vendor terms or shared-platform
+    fingerprint appears anywhere on the surface, and no other institution in the university cohort
+    ships this contract. Probed 2026-08-30 — every path under /api/ answers HTTP 200.
+  x-provenance:
+    generated: '2026-08-30'
+    method: derived
+    source: >-
+      Derived from the published API reference at https://www.tycho.pitt.edu/dataset/api/ (fetched
+      2026-08-30, HTTP 200, 31,978 bytes), which names every path, its returned variables, its
+      filter parameters and its paging parameters, reconciled against live keyless probes of all
+      fourteen documented paths on 2026-08-30.
+    authorship: >-
+      Written by API Evangelist, not published by the University of Pittsburgh. No machine-readable
+      contract for this API was found — https://www.tycho.pitt.edu/api/openapi.json,
+      /api/openapi.yaml and /api/swagger.json are not published, and the university operates no
+      developer portal (developer.pitt.edu and apis.pitt.edu do not resolve).
+    coverage: >-
+      All fourteen paths named in the published reference are modelled. Response bodies are CSV and
+      could not be captured without a key, so response schemas describe the documented column sets
+      rather than observed payloads, and are marked as such per operation. The full set of
+      filterable variables on /query is the Project Tycho Pre-compiled Data Format v1.0 variable
+      list; the documented subset is enumerated here and the remainder is described but not
+      enumerated rather than guessed.
+    limitation: >-
+      Path existence could NOT be confirmed by probe. The API evaluates the key before it routes:
+      https://www.tycho.pitt.edu/api/nonsensepath?apikey=INVALIDKEY returns exactly the same
+      HTTP 200 "Invalid API key" body as every documented path. The path list here therefore rests
+      on the published documentation alone.
+servers:
+- url: https://www.tycho.pitt.edu/api
+  description: Production — Project Tycho API, operated by the University of Pittsburgh
+security:
+- ProjectTychoApiKey: []
+tags:
+- name: variables
+  description: >-
+    Listings of the controlled values available for each variable of the Project Tycho Pre-compiled
+    Data Format version 1.0, except PeriodStartDate and PeriodEndDate.
+- name: data
+  description: Filtered retrieval of Project Tycho surveillance rows.
+paths:
+  /condition:
+    get:
+      tags: [variables]
+      operationId: listConditions
+      summary: List conditions
+      description: >-
+        Returns the full listing of available condition information as CSV with the columns
+        ConditionName and ConditionSNOMED. Both columns are also available as case-sensitive
+        equality filters.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - name: ConditionName
+        in: query
+        required: false
+        description: Case-sensitive exact match on ConditionName, e.g. `Measles`.
+        schema: { type: string }
+      - name: ConditionSNOMED
+        in: query
+        required: false
+        description: Case-sensitive exact match on the SNOMED CT concept id for the condition.
+        schema: { type: string }
+      responses:
+        '200':
+          $ref: '#/components/responses/ConditionCsv'
+  /country:
+    get:
+      tags: [variables]
+      operationId: listCountries
+      summary: List countries
+      description: Returns CountryISO and CountryName for every country present in the repository.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - name: CountryISO
+        in: query
+        required: false
+        description: Case-sensitive exact match on the ISO 3166-1 alpha-2 country code, e.g. `US`.
+        schema: { type: string }
+      - name: CountryName
+        in: query
+        required: false
+        description: Case-sensitive exact match on the country name, e.g. `UNITED STATES OF AMERICA`.
+        schema: { type: string }
+      responses:
+        '200':
+          $ref: '#/components/responses/CountryCsv'
+  /admin1:
+    get:
+      tags: [variables]
+      operationId: listAdmin1
+      summary: List first-level administrative divisions
+      description: >-
+        Returns CountryISO, CountryName, Admin1ISO and Admin1Name. Any of the four returned
+        variables may be used as a case-sensitive equality filter.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - $ref: '#/components/parameters/CountryISO'
+      - $ref: '#/components/parameters/CountryName'
+      - $ref: '#/components/parameters/Admin1ISO'
+      - $ref: '#/components/parameters/Admin1Name'
+      responses:
+        '200':
+          $ref: '#/components/responses/Admin1Csv'
+  /admin2:
+    get:
+      tags: [variables]
+      operationId: listAdmin2
+      summary: List second-level administrative divisions
+      description: >-
+        Returns CountryISO, CountryName, Admin1ISO, Admin1Name and Admin2Name. Any of the five
+        returned variables may be used as a case-sensitive equality filter.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - $ref: '#/components/parameters/CountryISO'
+      - $ref: '#/components/parameters/CountryName'
+      - $ref: '#/components/parameters/Admin1ISO'
+      - $ref: '#/components/parameters/Admin1Name'
+      - $ref: '#/components/parameters/Admin2Name'
+      responses:
+        '200':
+          $ref: '#/components/responses/Admin2Csv'
+  /city:
+    get:
+      tags: [variables]
+      operationId: listCities
+      summary: List cities
+      description: >-
+        Returns CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name and CityName. Any of the
+        six returned variables may be used as a case-sensitive equality filter.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - $ref: '#/components/parameters/CountryISO'
+      - $ref: '#/components/parameters/CountryName'
+      - $ref: '#/components/parameters/Admin1ISO'
+      - $ref: '#/components/parameters/Admin1Name'
+      - $ref: '#/components/parameters/Admin2Name'
+      - $ref: '#/components/parameters/CityName'
+      responses:
+        '200':
+          $ref: '#/components/responses/CityCsv'
+  /pathogen:
+    get:
+      tags: [variables]
+      operationId: listPathogens
+      summary: List pathogens
+      description: >-
+        Returns PathogenName and PathogenTaxonID (NCBI Taxonomy identifier). Both may be used as
+        case-sensitive equality filters.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - name: PathogenName
+        in: query
+        required: false
+        description: Case-sensitive exact match on the pathogen's scientific name.
+        schema: { type: string }
+      - name: PathogenTaxonID
+        in: query
+        required: false
+        description: Case-sensitive exact match on the NCBI Taxonomy identifier.
+        schema: { type: string }
+      responses:
+        '200':
+          $ref: '#/components/responses/PathogenCsv'
+  /agerange:
+    get:
+      tags: [variables]
+      operationId: listAgeRanges
+      summary: List age ranges
+      description: Returns the AgeRange column. The published reference states that no filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /subpopulation:
+    get:
+      tags: [variables]
+      operationId: listSubpopulations
+      summary: List subpopulations
+      description: Returns the Subpopulation column. The published reference states that no filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /fatalities:
+    get:
+      tags: [variables]
+      operationId: listFatalities
+      summary: List fatality flag values
+      description: Returns the Fatalities column. The published reference states that no filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /cumulative:
+    get:
+      tags: [variables]
+      operationId: listCumulative
+      summary: List cumulative-series flag values
+      description: >-
+        Returns the PartOfCumulativeCountSeries column. The published reference states that no
+        filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /diagnosiscertainty:
+    get:
+      tags: [variables]
+      operationId: listDiagnosisCertainty
+      summary: List diagnosis-certainty values
+      description: Returns the DiagnosisCertainty column. The published reference states that no filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /placeofacquisition:
+    get:
+      tags: [variables]
+      operationId: listPlaceOfAcquisition
+      summary: List place-of-acquisition values
+      description: >-
+        Returns the PlaceOfAcqusition column. The column name is misspelled in Project Tycho's own
+        published reference and in the data format; it is reproduced here verbatim rather than
+        corrected, because a client must send and read what the API actually uses.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /sourcename:
+    get:
+      tags: [variables]
+      operationId: listSourceNames
+      summary: List source names
+      description: Returns the SourceName column. The published reference states that no filters are available.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/SingleColumnCsv'
+  /query:
+    get:
+      tags: [data]
+      operationId: querySurveillanceData
+      summary: Query surveillance data
+      description: >-
+        Returns a filtered subset of Project Tycho surveillance rows in the Project Tycho
+        Pre-compiled Data Format version 1.0, as CSV. Every call MUST specify both a condition and
+        a location. The condition is given as one of ConditionName or ConditionSNOMED; the location
+        is given as at least one of CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name or
+        CityName. Any remaining variable in the data format may be added as an optional filter.
+        Date ranges use PeriodStartDate and PeriodEndDate with the operators =, >= and <=, and dates
+        must be formatted YYYY-MM-DD. Variable names are case-sensitive and must match the case used
+        in the data format column headings.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - name: ConditionName
+        in: query
+        required: false
+        description: >-
+          Required unless ConditionSNOMED is supplied. Case-sensitive exact match, e.g. `Measles`.
+        schema: { type: string }
+      - name: ConditionSNOMED
+        in: query
+        required: false
+        description: Required unless ConditionName is supplied. SNOMED CT concept id for the condition.
+        schema: { type: string }
+      - $ref: '#/components/parameters/CountryISO'
+      - $ref: '#/components/parameters/CountryName'
+      - $ref: '#/components/parameters/Admin1ISO'
+      - $ref: '#/components/parameters/Admin1Name'
+      - $ref: '#/components/parameters/Admin2Name'
+      - $ref: '#/components/parameters/CityName'
+      - name: PeriodStartDate
+        in: query
+        required: false
+        description: >-
+          Reporting-period start, YYYY-MM-DD. The documented operators are `=`, `>=` and `<=`; the
+          operator is written into the query string itself (PeriodStartDate>=2000-01-01) rather than
+          passed as a separate parameter.
+        schema: { type: string, format: date }
+      - name: PeriodEndDate
+        in: query
+        required: false
+        description: Reporting-period end, YYYY-MM-DD. Same operator convention as PeriodStartDate.
+        schema: { type: string, format: date }
+      - name: Fatalities
+        in: query
+        required: false
+        description: Restrict to fatality (1) or non-fatality (0) counts.
+        schema: { type: string, enum: ['0', '1'] }
+      - name: PartOfCumulativeCountSeries
+        in: query
+        required: false
+        description: Restrict to rows that are (1) or are not (0) part of a cumulative count series.
+        schema: { type: string, enum: ['0', '1'] }
+      - name: SourceName
+        in: query
+        required: false
+        description: Restrict to rows attributed to one reporting source.
+        schema: { type: string }
+      - name: limit
+        in: query
+        required: false
+        description: Rows of results to retrieve. Default 5000, maximum 20000.
+        schema: { type: integer, default: 5000, maximum: 20000, minimum: 1 }
+      - name: offset
+        in: query
+        required: false
+        description: >-
+          Row offset for paging. With limit=5000, offset=5000 returns results starting at row 5001.
+          An offset past the end of the result set returns the literal text "No results".
+        schema: { type: integer, minimum: 0 }
+      responses:
+        '200':
+          $ref: '#/components/responses/TychoDataCsv'
+components:
+  securitySchemes:
+    ProjectTychoApiKey:
+      type: apiKey
+      in: query
+      name: apikey
+      description: >-
+        A free API key, obtained from the Profile page after registering an account at
+        https://www.tycho.pitt.edu. The key travels in the query string on every request, which
+        means it is written into server access logs, browser history, referrer headers and any
+        intermediary cache. Project Tycho offers no header-based alternative.
+  parameters:
+    ApiKey:
+      name: apikey
+      in: query
+      required: true
+      description: Project Tycho API key. Required on every request; evaluated before routing.
+      schema: { type: string }
+    CountryISO:
+      name: CountryISO
+      in: query
+      required: false
+      description: Case-sensitive exact match on ISO 3166-1 alpha-2 country code, e.g. `US`.
+      schema: { type: string }
+    CountryName:
+      name: CountryName
+      in: query
+      required: false
+      description: Case-sensitive exact match on country name, e.g. `UNITED STATES OF AMERICA`.
+      schema: { type: string }
+    Admin1ISO:
+      name: Admin1ISO
+      in: query
+      required: false
+      description: Case-sensitive exact match on ISO 3166-2 subdivision code, e.g. `US-PA`.
+      schema: { type: string }
+    Admin1Name:
+      name: Admin1Name
+      in: query
+      required: false
+      description: Case-sensitive exact match on first-level division name, e.g. `Pennsylvania`.
+      schema: { type: string }
+    Admin2Name:
+      name: Admin2Name
+      in: query
+      required: false
+      description: Case-sensitive exact match on second-level division name (US county or equivalent).
+      schema: { type: string }
+    CityName:
+      name: CityName
+      in: query
+      required: false
+      description: Case-sensitive exact match on city name.
+      schema: { type: string }
+  responses:
+    ConditionCsv:
+      description: CSV with a header row and the columns ConditionName, ConditionSNOMED.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/ConditionRow'
+    CountryCsv:
+      description: CSV with a header row and the columns CountryISO, CountryName.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/CountryRow'
+    Admin1Csv:
+      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/Admin1Row'
+    Admin2Csv:
+      description: >-
+        CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name,
+        Admin2Name.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/Admin2Row'
+    CityCsv:
+      description: >-
+        CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name,
+        Admin2Name, CityName.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/CityRow'
+    PathogenCsv:
+      description: CSV with a header row and the columns PathogenName, PathogenTaxonID.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/PathogenRow'
+    SingleColumnCsv:
+      description: >-
+        CSV with a header row naming the single variable and one row per available value. The
+        column name matches the variable named in the operation description.
+      content:
+        text/csv:
+          schema:
+            type: object
+            description: One CSV row carrying the single named variable.
+            additionalProperties: { type: string }
+    TychoDataCsv:
+      description: >-
+        CSV in the Project Tycho Pre-compiled Data Format version 1.0. An offset past the end of
+        the result set returns the literal text "No results" rather than an empty CSV body.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/TychoDataRow'
+  schemas:
+    ConditionRow:
+      type: object
+      description: One row of the /condition listing.
+      properties:
+        ConditionName: { type: string, description: Human-readable condition name, e.g. Measles. }
+        ConditionSNOMED: { type: string, description: SNOMED CT concept id for the condition. }
+    CountryRow:
+      type: object
+      description: One row of the /country listing.
+      properties:
+        CountryISO: { type: string, description: ISO 3166-1 alpha-2 country code. }
+        CountryName: { type: string, description: Country name as used by Project Tycho. }
+    Admin1Row:
+      type: object
+      description: One row of the /admin1 listing.
+      properties:
+        CountryISO: { type: string }
+        CountryName: { type: string }
+        Admin1ISO: { type: string, description: ISO 3166-2 subdivision code, e.g. US-PA. }
+        Admin1Name: { type: string }
+    Admin2Row:
+      type: object
+      description: One row of the /admin2 listing.
+      properties:
+        CountryISO: { type: string }
+        CountryName: { type: string }
+        Admin1ISO: { type: string }
+        Admin1Name: { type: string }
+        Admin2Name: { type: string, description: Second-level division, US county or equivalent. }
+    CityRow:
+      type: object
+      description: One row of the /city listing.
+      properties:
+        CountryISO: { type: string }
+        CountryName: { type: string }
+        Admin1ISO: { type: string }
+        Admin1Name: { type: string }
+        Admin2Name: { type: string }
+        CityName: { type: string }
+    PathogenRow:
+      type: object
+      description: One row of the /pathogen listing.
+      properties:
+        PathogenName: { type: string, description: Scientific name of the pathogen. }
+        PathogenTaxonID: { type: string, description: NCBI Taxonomy identifier. }
+    TychoDataRow:
+      type: object
+      description: >-
+        One surveillance row in the Project Tycho Pre-compiled Data Format version 1.0. The columns
+        below are those the published API reference names explicitly as filterable or returned; the
+        format carries further columns that the reference does not enumerate, and they are
+        deliberately absent here rather than guessed.
+      properties:
+        ConditionName: { type: string }
+        ConditionSNOMED: { type: string }
+        PathogenName: { type: string }
+        PathogenTaxonID: { type: string }
+        CountryISO: { type: string }
+        CountryName: { type: string }
+        Admin1ISO: { type: string }
+        Admin1Name: { type: string }
+        Admin2Name: { type: string }
+        CityName: { type: string }
+        PeriodStartDate: { type: string, format: date }
+        PeriodEndDate: { type: string, format: date }
+        PartOfCumulativeCountSeries: { type: string, enum: ['0', '1'] }
+        AgeRange: { type: string }
+        Subpopulation: { type: string }
+        PlaceOfAcqusition:
+          type: string
+          description: Misspelled in Project Tycho's own data format; reproduced verbatim.
+        DiagnosisCertainty: { type: string }
+        SourceName: { type: string }
+        Fatalities: { type: string, enum: ['0', '1'] }

@@ -1,0 +1,21 @@
+{
+  "provider": "university-of-pittsburgh",
+  "sources": [
+    "_original/university-of-pittsburgh-project-tycho-api-openapi.yml"
+  ],
+  "outputs": [
+    "university-of-pittsburgh-data-api-openapi.yml",
+    "university-of-pittsburgh-variables-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "university-of-pittsburgh-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-pittsburgh-variables-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

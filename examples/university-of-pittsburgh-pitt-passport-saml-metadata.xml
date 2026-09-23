@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Pitt Passport IdP metadata
+-->
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" entityID="https://passport.pitt.edu/idp/shibboleth">
+	<IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
+		<Extensions>
+			<shibmd:Scope regexp="false">pitt.edu</shibmd:Scope>
+			<mdui:UIInfo>
+				<mdui:DisplayName xml:lang="en">Pitt Passport Login Service</mdui:DisplayName>
+				<mdui:Description xml:lang="en">Pitt production IdP at passport.pitt.edu</mdui:Description>
+				<!--
+                <mdui:Logo height="HeightInPixels" width="WidthInPixels">https://passport.pitt.edu/Path/To/Logo.png</mdui:Logo>
+				-->
+			</mdui:UIInfo>
+		</Extensions>
+		<KeyDescriptor use="signing">
+			<ds:KeyInfo>
+				<ds:X509Data>
+					<ds:X509Certificate>
+MIIDLzCCAhegAwIBAgIUZiByS7B062+ol+pZKrqkwBxrqLUwDQYJKoZIhvcNAQEL
+BQAwHDEaMBgGA1UEAwwRcGFzc3BvcnQucGl0dC5lZHUwHhcNMTUxMTEzMTczMDQ3
+WhcNMzUxMTEzMTczMDQ3WjAcMRowGAYDVQQDDBFwYXNzcG9ydC5waXR0LmVkdTCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIXgP4IOEjINaJ9dePEzc5Wp
+J8+Ytw0Ojc/JlImfMlUf9yiwiQZQhYIv7C7KmSIgBBvzj/4e6x+tGioE3vIPq9Yz
+47zLOUjzsPgSXnmqSujVCF1zce5aXsjwNcZ5JFN037pgoNLpwtuzfLg9sPbTdQV4
+dRGE07eIXiil6+ER1diFrmGQYSrlfY8DX4sZzl7er6eNEkN5bb3sYK4W13g54Vwf
+BT9/nZe8dsVq7HSZeGdqtyU9Vm49BxpRJLi/X1xsoTCsa8jSRGhpfktR/UygnMWc
+oKfayjUC/3fjyBBEvb2EbIiAByYZeApM8zCynHpoHbNTCECIfmkQ6YYohEVave8C
+AwEAAaNpMGcwHQYDVR0OBBYEFAguZrxqsqNCg5KQhdAnsGrSFZEgMEYGA1UdEQQ/
+MD2CEXBhc3Nwb3J0LnBpdHQuZWR1hihodHRwczovL3Bhc3Nwb3J0LnBpdHQuZWR1
+L2lkcC9zaGliYm9sZXRoMA0GCSqGSIb3DQEBCwUAA4IBAQBdX30sZVe9QfYYJydn
+x+nWdKeGT0FxqPHaLaa/NHREOetOG1DHYCi617zy0bXq9Vnm+bZpqIheBHwzGzpk
+U5MJrPjwnmy1YyjoFNKy9N5KTQ+nCv7fKfLv55LSNE685T144B2KcRcFg3cDd2jt
+keVXfOYIBWnyEPnFeTlVA5Y16kbly78ixjTRGXaSLtrwCOJ25kM2+RAyZwp6/lHC
+S6tSx6TluEVAaA9y/ByyF41xdJk6iqgtqR6NmUIZLZlJ5dAOoyddHFgzWnKCqvtF
+RtrlnjGNwrHyXGWJbgY7wixreqLbBKAQ+nbaesqlCii8lR/5LawpnSAZmGD2diwl
+133k
+          </ds:X509Certificate>
+				</ds:X509Data>
+			</ds:KeyInfo>
+		</KeyDescriptor>
+		<KeyDescriptor use="encryption">
+			<ds:KeyInfo>
+				<ds:X509Data>
+					<ds:X509Certificate>
+MIIDMDCCAhigAwIBAgIVANJ07z1fNkIV0lD9Ve89KN3gzBKSMA0GCSqGSIb3DQEB
+CwUAMBwxGjAYBgNVBAMMEXBhc3Nwb3J0LnBpdHQuZWR1MB4XDTE1MTExMzE3MzA0
+OFoXDTM1MTExMzE3MzA0OFowHDEaMBgGA1UEAwwRcGFzc3BvcnQucGl0dC5lZHUw
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAadDai5NaRQW9XOuD0KHw
+GCeYzsUyKvGwi4AhcQBB2D5ZwVEZhg08NCvlD8s2kmlQIL58BDhe8/UKF+cFV9jR
+ksiUDuIYY1L8ypm/9A0jKjq4J5dbY+zlkfpze8C34/qTIA5owBNmvlL4b6llOBV2
+srDCbv2mho3j7fJICv+fm/SovPFQJBO8zVeNomXjm97aY9TRfrhzlZ0wVwAy700u
+uXRAar7qP+gC23gwAR4fL5WvI/kNABgcGPnBSnUOra1hxNtcK1MLgyqJbBkYosSR
+jwlvHTyFICaR+KGqiuLJLPVn6SMlzs2ND20CHxOaz2oz3746ZTJDoHoQc/dvuOA3
+AgMBAAGjaTBnMB0GA1UdDgQWBBTyBzAX8brmshdB0o8aSTWVOg6MFTBGBgNVHREE
+PzA9ghFwYXNzcG9ydC5waXR0LmVkdYYoaHR0cHM6Ly9wYXNzcG9ydC5waXR0LmVk
+dS9pZHAvc2hpYmJvbGV0aDANBgkqhkiG9w0BAQsFAAOCAQEAG2Ou9h7e4oED7Vou
+CeMh58qC9pt4H3gleMexTaZ2VovE7i/orVkbB36Ik6lplEjlo8o54PXurGIUOpm9
+bTGNuGODTMjjq6ojUNSawpz7W7DRqxJJvLTh2gGJSNCX3AOhfmDJvxCpHaOlEZ3R
+AlpGnV7EpG3uTaE4YCvep16gCpAyjJhmqV5ouMswH6SxXzUG4UqJAm+obblgoqcC
+XajmdjCN8hayTFsVy1H3a82M+zhcdpFo+QraqVan3Z29Lf9LIbGqngxWxGE4mchi
+jdaqsVSwq38Xr96uO/Apms/9CPL/CayrvlbPpvcv0u9z5uEmmssPdW4DhaILLsRo
+zdvadQ==
+          </ds:X509Certificate>
+				</ds:X509Data>
+			</ds:KeyInfo>
+		</KeyDescriptor>
+		<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+    <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://passport.pitt.edu/idp/profile/Shibboleth/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://passport.pitt.edu/idp/profile/SAML2/POST/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://passport.pitt.edu/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://passport.pitt.edu/idp/profile/SAML2/Redirect/SSO"/>
+	</IDPSSODescriptor>
+</EntityDescriptor>

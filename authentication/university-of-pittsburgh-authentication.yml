@@ -1,0 +1,131 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of every surface attributed to the University of Pittsburgh, plus the
+  published API reference at https://www.tycho.pitt.edu/dataset/api/ and
+  openapi/university-of-pittsburgh-project-tycho-api-openapi.yml.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+summary:
+  types:
+  - api_key
+  - none
+  - saml
+  institution_operated_public_apis_requiring_no_auth: 2
+  institution_operated_public_apis_requiring_a_key: 1
+  tenant_operated_public_apis_requiring_no_auth: 1
+  oauth_surfaces_operated_by_the_institution: 0
+  institution_wide_key_issuance: false
+schemes:
+- name: ProjectTychoApiKey
+  type: api_key
+  operator: institution
+  applies_to: https://www.tycho.pitt.edu/api
+  location: query
+  parameter: apikey
+  registration: >-
+    Free. Create an account at https://www.tycho.pitt.edu and read the key off the user Profile
+    page. No approval step, plan tier or contract is documented.
+  description: >-
+    Every Project Tycho API call carries the key in the query string as `apikey`. There is no
+    header-based alternative, so the credential is written into server access logs, browser
+    history, Referer headers and any intermediary cache that sees the URL. The key is also
+    evaluated BEFORE routing: a request to a path that does not exist returns the same "Invalid
+    API key" body as a real path, so an unauthenticated client cannot discover or verify the
+    surface at all.
+  evidence:
+    url: https://www.tycho.pitt.edu/api/condition?apikey=INVALIDKEY
+    status: 200
+    content_type: text/html
+    body: 'Invalid API key. Please see the <a href="/dataset/api">API Help</a> (https://www.tycho.pitt.edu/dataset/api) for more information.'
+  defects:
+  - >-
+    An authentication failure is served with HTTP 200 and an HTML fragment. A client branching on
+    response.ok, or a pipeline checking the status line, reads a rejected credential as a success.
+  - >-
+    The credential is a URL query parameter with no header alternative and no documented rotation,
+    expiry or revocation path.
+- name: WPRDCCkanPublicRead
+  type: none
+  operator: institution
+  applies_to: https://data.wprdc.org/api/3/action
+  description: >-
+    The Western Pennsylvania Regional Data Center's CKAN Action API is readable with no credential.
+    Probed keyless on 2026-08-30: package_search returned HTTP 200 with 24,782 bytes of JSON,
+    status_show returned CKAN 2.11.6, package_list returned 13,372 bytes. CKAN's write actions
+    require an API token, but no public write path is offered here. Note that the portal presents a
+    click-through Data Use Agreement to browsers which the API does not enforce.
+  evidence:
+    url: https://data.wprdc.org/api/3/action/package_search?rows=1
+    status: 200
+    content_type: application/json
+- name: ULSOaiPmhPublicRead
+  type: none
+  operator: institution
+  applies_to: https://anthro-age.pitt.edu/ojs/anthro-age/oai
+  description: >-
+    The University Library System's OAI-PMH 2.0 providers are open to anonymous harvesting. Identify,
+    ListMetadataFormats and ListRecords all answered HTTP 200 with no credential on 2026-08-30
+    across four separate journal hosts.
+  evidence:
+    url: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=Identify
+    status: 200
+    content_type: text/xml
+- name: ULSOjsRestApiClosed
+  type: api_key
+  operator: institution
+  applies_to: https://anthro-age.pitt.edu/ojs/anthro-age/api/v1
+  description: >-
+    The PKP Open Journal Systems REST API is deployed alongside each OAI-PMH provider but is closed
+    to the public: it answers HTTP 403 with {"error":"api.403.unauthorized"} to unauthenticated
+    callers. OJS gates this API behind a per-user API token issued inside the journal, which is not
+    obtainable by a member of the public. Recorded so the surface is not mistaken for an open one.
+  evidence:
+    url: https://anthro-age.pitt.edu/ojs/anthro-age/api/v1/issues
+    status: 403
+    content_type: application/json
+    body: '{"error":"api.403.unauthorized","errorMessage":"You are not authorized to access the requested resource."}'
+- name: DScholarshipOaiPmhPublicRead
+  type: none
+  operator: tenant
+  vendor: Hyku Commons (Samvera Hyku)
+  applies_to: https://d-scholarship.pitt.edu/catalog/oai
+  description: >-
+    D-Scholarship@Pitt's OAI-PMH provider is open to anonymous harvesting. Identify,
+    ListMetadataFormats (oai_dc, oai_hyku) and ListRecords all answered HTTP 200 with no credential
+    on 2026-08-30. Recorded with operator `tenant`: d-scholarship.pitt.edu CNAMEs to
+    pittir.hykucommons.org and the provider is Hyku's blacklight_oai_provider, so the content and
+    the DOIs are Pitt's but the endpoint and its access model are the platform's. Note that the
+    repository's HTML surface at the same hostname returns HTTP 403 behind a Cloudflare challenge to
+    the same client that the OAI path serves without complaint.
+  evidence:
+    url: https://d-scholarship.pitt.edu/catalog/oai?verb=Identify
+    status: 200
+    content_type: text/xml
+- name: PittPassportShibboleth
+  type: saml
+  operator: institution
+  applies_to: https://passport.pitt.edu/idp/shibboleth
+  description: >-
+    Pitt Passport is the campus SAML 2.0 / Shibboleth identity provider. It authenticates people to
+    relying service providers; it is not a data API and issues no credential a machine client can
+    use to call one. Recorded because it is the most unambiguously institution-operated
+    machine-readable surface the University of Pittsburgh publishes, and because it is what makes
+    the `shibboleth` and `saml` conformance hits real.
+  evidence:
+    url: https://passport.pitt.edu/idp/shibboleth
+    status: 200
+    content_type: application/xml
+notes:
+- >-
+  The University of Pittsburgh operates no OAuth 2.0 authorization server, no API gateway, no
+  developer portal and no institution-wide key issuance. developer.pitt.edu and apis.pitt.edu do
+  not resolve; https://www.pitt.edu/apis.json and https://www.pitt.edu/llms.txt return 404. Each
+  surface above carries its own unrelated auth model because each was built by a different unit.

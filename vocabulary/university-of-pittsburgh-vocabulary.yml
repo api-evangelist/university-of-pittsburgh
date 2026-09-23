@@ -1,0 +1,157 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: derived
+source: >-
+  Derived from the published Project Tycho API reference at https://www.tycho.pitt.edu/dataset/api/
+  (HTTP 200, 2026-08-30), the Identify and ListMetadataFormats responses of the University Library
+  System's OAI-PMH providers, and the CKAN status_show response at data.wprdc.org. Nothing here is
+  invented; every term appears verbatim on one of those surfaces.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+description: >-
+  The University of Pittsburgh has no institution-wide API vocabulary, because it has no
+  institution-wide API. What it has is three unrelated controlled vocabularies belonging to three
+  units, none of which shares a term, a case convention or an identifier scheme with the others.
+  Project Tycho uses PascalCase variable names of its own design; the CKAN Action API uses
+  snake_case terms from CKAN upstream; OAI-PMH uses the protocol's own camelCase verbs. The
+  divergence is the finding.
+vocabularies:
+- name: Project Tycho Pre-compiled Data Format version 1.0
+  operator: institution
+  applies_to: https://www.tycho.pitt.edu/api
+  case_convention: PascalCase
+  identifier_schemes:
+  - SNOMED CT (ConditionSNOMED)
+  - NCBI Taxonomy (PathogenTaxonID)
+  - ISO 3166-1 alpha-2 (CountryISO)
+  - ISO 3166-2 (Admin1ISO)
+  note: >-
+    Every one of these terms is simultaneously a returned CSV column, a filter parameter name and a
+    listing endpoint — /condition lists the values ConditionName can take. The API is, in effect, a
+    self-describing controlled vocabulary with a query endpoint attached, which is unusual and worth
+    noting as a design.
+  terms:
+  - term: ConditionName
+    definition: Human-readable name of the notifiable condition or disease, e.g. Measles.
+    endpoint: /condition
+  - term: ConditionSNOMED
+    definition: SNOMED CT concept identifier for the condition.
+    endpoint: /condition
+  - term: PathogenName
+    definition: Scientific name of the causative pathogen, e.g. Anaplasma phagocytophilum.
+    endpoint: /pathogen
+  - term: PathogenTaxonID
+    definition: NCBI Taxonomy identifier for the pathogen.
+    endpoint: /pathogen
+  - term: CountryISO
+    definition: ISO 3166-1 alpha-2 country code.
+    endpoint: /country
+  - term: CountryName
+    definition: Country name in Project Tycho's own casing, e.g. UNITED STATES OF AMERICA.
+    endpoint: /country
+  - term: Admin1ISO
+    definition: ISO 3166-2 code for the first-level administrative division, e.g. US-PA.
+    endpoint: /admin1
+  - term: Admin1Name
+    definition: Name of the first-level administrative division, e.g. Pennsylvania.
+    endpoint: /admin1
+  - term: Admin2Name
+    definition: Name of the second-level administrative division — a county or equivalent.
+    endpoint: /admin2
+  - term: CityName
+    definition: Name of the city the count was reported for.
+    endpoint: /city
+  - term: AgeRange
+    definition: Age band the count applies to.
+    endpoint: /agerange
+  - term: Subpopulation
+    definition: Subpopulation the count applies to.
+    endpoint: /subpopulation
+  - term: Fatalities
+    definition: Whether the count is of fatalities (1) or non-fatalities (0).
+    endpoint: /fatalities
+  - term: PartOfCumulativeCountSeries
+    definition: Whether the row belongs to a cumulative count series (1) or is a period count (0).
+    endpoint: /cumulative
+  - term: DiagnosisCertainty
+    definition: Certainty of the diagnosis behind the reported count.
+    endpoint: /diagnosiscertainty
+  - term: PlaceOfAcqusition
+    definition: >-
+      Where the infection was acquired. Misspelled in Project Tycho's own reference and in the data
+      format itself; reproduced verbatim because a client must send and read the term the API uses,
+      not the correct English word.
+    endpoint: /placeofacquisition
+    defect: misspelled_in_source
+  - term: SourceName
+    definition: Name of the agency or publication the count was reported by.
+    endpoint: /sourcename
+  - term: PeriodStartDate
+    definition: >-
+      Start of the reporting period, YYYY-MM-DD. One of only two variables with no listing endpoint,
+      and one of only two that accepts the range operators >= and <=.
+  - term: PeriodEndDate
+    definition: End of the reporting period, YYYY-MM-DD.
+- name: CKAN Action API
+  operator: institution
+  applies_to: https://data.wprdc.org/api/3/action
+  case_convention: snake_case
+  note: >-
+    CKAN's upstream vocabulary, not the University of Pittsburgh's. Recorded because it is what a
+    caller of the WPRDC portal must speak, and explicitly attributed to CKAN so that Pitt is not
+    credited with designing it. The deployment adds one local extension, `wprdctheme`, alongside
+    datajson, datastore, spatialdata, tracking, stats, dcat, dcat_json_interface, structured_data,
+    datapusher_plus and the standard view plugins.
+  terms:
+  - term: package
+    definition: CKAN's term for a dataset. WPRDC's own interface calls the same object a "dataset".
+  - term: resource
+    definition: One distributable file or endpoint within a package.
+  - term: organization
+    definition: >-
+      The publishing body. At WPRDC these are the partner governments and agencies — Allegheny
+      County, the City of Pittsburgh and others — not university departments.
+  - term: datastore
+    definition: CKAN's tabular store, queried through datastore_search and datastore_search_sql.
+  - term: dcat:Catalog / dcat:Dataset
+    definition: >-
+      DCAT-US 1.1 terms emitted at https://data.wprdc.org/data.json and
+      https://data.wprdc.org/catalog.jsonld, which declare conformsTo
+      https://project-open-data.cio.gov/v1.1/schema.
+- name: OAI-PMH 2.0
+  operator: institution
+  applies_to: https://anthro-age.pitt.edu/ojs/anthro-age/oai
+  case_convention: camelCase verbs
+  note: >-
+    The Open Archives Initiative's protocol vocabulary, not Pitt's. Recorded because the University
+    Library System operates conformant providers of it, and because the advertised metadata prefixes
+    are a real institutional choice.
+  terms:
+  - term: Identify / ListMetadataFormats / ListRecords / ListIdentifiers / ListSets / GetRecord
+    definition: The six OAI-PMH 2.0 verbs.
+  - term: 'metadataPrefix: oai_dc'
+    definition: Dublin Core, the mandatory format. Advertised and returning real records.
+  - term: 'metadataPrefix: marcxml'
+    definition: MARC 21 XML. Advertised.
+  - term: 'metadataPrefix: oai_marc'
+    definition: The older OAI MARC format. Advertised.
+  - term: 'metadataPrefix: rfc1807'
+    definition: RFC 1807 bibliographic format. Advertised.
+divergences:
+- >-
+  Three vocabularies, three case conventions — PascalCase, snake_case and camelCase — inside one
+  institution. A client integrating two Pitt surfaces shares no field name between them.
+- >-
+  Project Tycho and CKAN both carry geography and both use ISO codes, but Tycho spells the concept
+  Admin1ISO and CKAN's spatial extension uses DCAT `spatial`. There is no crosswalk, and none is
+  published.
+- >-
+  The one identifier scheme that does span the institution is the DOI, minted under both DataCite
+  (PITT.ULS, PITT.CADB) and Crossref (prefixes 10.5195 and 10.18117) — and it is the only vocabulary
+  in this file that any two Pitt units genuinely share.

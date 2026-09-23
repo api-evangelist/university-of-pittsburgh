@@ -1,0 +1,33 @@
+{
+    "help": "https://data.wprdc.org/api/3/action/help_show?name=status_show",
+    "success": true,
+    "result": {
+        "site_title": "CKAN",
+        "site_description": "Data Portal",
+        "site_url": "https://data.wprdc.org",
+        "error_emails_to": "",
+        "locale_default": "en",
+        "extensions": [
+            "datajson",
+            "datastore",
+            "spatialdata",
+            "tracking",
+            "stats",
+            "wprdctheme",
+            "scheming_datasets",
+            "dcat",
+            "dcat_json_interface",
+            "structured_data",
+            "datapusher_plus",
+            "officedocs_view",
+            "pdf_view",
+            "geo_view",
+            "text_view",
+            "webpage_view",
+            "image_view",
+            "datatables_view",
+            "envvars"
+        ],
+        "ckan_version": "2.11.6"
+    }
+}

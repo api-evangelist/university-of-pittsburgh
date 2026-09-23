@@ -1,0 +1,139 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live error probes of https://www.tycho.pitt.edu/api, https://data.wprdc.org/api/3/action,
+  https://anthro-age.pitt.edu/ojs/anthro-age and https://d-scholarship.pitt.edu on 2026-08-30. The
+  University of Pittsburgh publishes no error reference for any of these surfaces; every entry
+  below is an observed response, not a documented one.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+apis:
+- aid: university-of-pittsburgh:project-tycho
+  operator: institution
+  envelope:
+    shape: 'Plain HTML fragment, no envelope'
+    content_type: text/html
+    note: >-
+      Project Tycho returns errors as an HTML sentence with HTTP 200 and no machine-readable
+      structure — no code, no field, no JSON. Successful calls return text/csv. A client cannot
+      distinguish success from failure by status code or content type alone without parsing the
+      body.
+  errors:
+  - status: 200
+    message: 'Invalid API key. Please see the <a href="/dataset/api">API Help</a> (https://www.tycho.pitt.edu/dataset/api) for more information.'
+    trigger: The apikey query parameter is missing, malformed or not recognised.
+    evidence:
+      url: https://www.tycho.pitt.edu/api/condition?apikey=INVALIDKEY
+      status: 200
+    note: >-
+      This is the important one, and it has two failure modes stacked on each other. First, a
+      rejected credential is served with HTTP 200, so anything branching on response.ok treats it as
+      a success. Second, the key is checked BEFORE the path is routed: /api/nonsensepath?apikey=INVALIDKEY
+      returns byte-identical output to /api/condition?apikey=INVALIDKEY, so an unauthenticated
+      caller cannot tell a real endpoint from a typo, and no path in this API can be verified
+      without a credential.
+  - status: 200
+    message: 'No results'
+    trigger: >-
+      A /query call whose offset exceeds the number of rows in the result set. Documented in the
+      published API reference.
+    note: >-
+      A bare text string rather than an empty CSV body, so a CSV parser reading the response gets a
+      single malformed row rather than zero rows.
+  documented_error_reference: false
+  documented_error_reference_note: >-
+    https://www.tycho.pitt.edu/dataset/api/ documents parameters and examples but contains no error
+    section, no status-code table and no error catalogue.
+- aid: university-of-pittsburgh:wprdc-ckan
+  operator: institution
+  envelope:
+    shape: '{"help": "<url>", "success": <bool>, "error": {"__type": "<type>", "message": "<text>"}}'
+    content_type: application/json
+    note: >-
+      The CKAN Action API envelope. This is CKAN's contract, not Pitt's engineering — recorded here
+      because it is what a caller of data.wprdc.org actually receives, and because it is the one
+      surface in this profile that carries its status in a structured field and in the HTTP status
+      line at the same time.
+  errors:
+  - status: 200
+    message: 'success: true with an empty result set'
+    trigger: A well-formed package_search that matches nothing.
+    note: CKAN reports "no matches" as a successful search with count 0, not as an error.
+  - status: 404
+    message: '{"success": false, "error": {"__type": "Not Found Error"}}'
+    trigger: An unknown action name or an unknown package id.
+  documented_error_reference: false
+  documented_error_reference_note: >-
+    WPRDC publishes no error reference of its own; callers are left to CKAN's upstream documentation.
+- aid: university-of-pittsburgh:uls-ejournal-oai
+  operator: institution
+  envelope:
+    shape: '<OAI-PMH><error code="..."/></OAI-PMH>'
+    content_type: text/xml
+    note: >-
+      OAI-PMH 2.0's own error model. Protocol errors are returned inside a valid OAI-PMH envelope
+      with HTTP 200, which is the protocol behaving correctly rather than a defect.
+  errors:
+  - status: 403
+    message: '{"error":"api.403.unauthorized","errorMessage":"You are not authorized to access the requested resource."}'
+    trigger: Any unauthenticated call to the OJS REST API at /api/v1/*.
+    evidence:
+      url: https://anthro-age.pitt.edu/ojs/anthro-age/api/v1/issues
+      status: 403
+    note: >-
+      Correct behaviour, and worth contrasting with Project Tycho on the same campus: OJS returns a
+      real 403 with a stable machine-readable error code, where Tycho returns 200 with prose.
+  documented_error_reference: false
+- aid: university-of-pittsburgh:d-scholarship-oai
+  operator: tenant
+  vendor: Hyku Commons (Samvera Hyku)
+  envelope:
+    shape: '<OAI-PMH><error code="..."/></OAI-PMH> on the live path; Cloudflare interstitial HTML on the stale one'
+    content_type: text/xml
+    note: >-
+      Two different failure surfaces live on the same hostname, and telling them apart is the whole
+      finding here. https://d-scholarship.pitt.edu/catalog/oai — the current Hyku endpoint — answers
+      HTTP 200 with conformant OAI-PMH. https://d-scholarship.pitt.edu/cgi/oai2 — the stale EPrints
+      path from before the migration — answers HTTP 403 behind a Cloudflare challenge.
+  errors:
+  - status: 403
+    message: 'Just a moment...'
+    trigger: >-
+      Any automated request to the repository's HTML surface or to the stale /cgi/oai2 path,
+      including one carrying a full browser User-Agent and navigation headers.
+    evidence:
+      url: https://d-scholarship.pitt.edu/cgi/oai2?verb=Identify
+      status: 403
+    note: >-
+      A Cloudflare bot challenge, not an application error. The June 2026 profile read this as bot
+      protection over a working endpoint; it is in fact a dead path, and the working endpoint at
+      /catalog/oai was one path away and answered 200 on the first try. The lesson is the pipeline's
+      own: read the body, and probe the alternative before concluding a surface is blocked.
+  - status: 200
+    message: '<OAI-PMH><error code="badVerb">...</error></OAI-PMH>'
+    trigger: An unrecognised verb or a missing required argument on /catalog/oai.
+    evidence:
+      url: https://d-scholarship.pitt.edu/catalog/oai?verb=Identify
+      status: 200
+    note: >-
+      OAI-PMH 2.0's own error model, returned by blacklight_oai_provider. Protocol errors travel
+      inside a valid envelope with HTTP 200 — correct protocol behaviour, and the vendor's
+      implementation rather than Pitt's.
+  documented_error_reference: false
+cross_cutting_observations:
+- >-
+  Four surfaces, four unrelated error models, no shared envelope and no shared vocabulary. There is
+  no institution-wide error convention at the University of Pittsburgh because there is no
+  institution-wide API program — each surface was built by a different unit (Public Health Dynamics
+  Laboratory, UCSUR, University Library System) and inherits the error model of whatever software it
+  runs on.
+- >-
+  Not one of the four publishes an error reference. The only error documentation of any kind found
+  on a pitt.edu host is the single sentence Project Tycho returns in the error body itself.

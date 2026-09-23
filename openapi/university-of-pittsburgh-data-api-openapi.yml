@@ -1,0 +1,231 @@
+openapi: 3.2.0
+info:
+  title: Project Tycho Data API
+  version: '1.0'
+  description: Project Tycho is an open-access repository for global health surveillance data, built and operated at the University of Pittsburgh and served from www.tycho.pitt.edu (136.142.8.172, inside Pitt's own 136.142.0.0/16).
+  termsOfService: https://www.tycho.pitt.edu/dataset/api/
+  contact:
+    name: Project Tycho — University of Pittsburgh
+    email: tycho@phdl.pitt.edu
+    url: https://www.tycho.pitt.edu/about/
+  license:
+    name: Open access — see Project Tycho data use terms
+    url: https://www.tycho.pitt.edu/about/
+  x-operator: institution
+  x-operator-evidence: servers[] www.tycho.pitt.edu is a host under the University of Pittsburgh's own registrable domain, pitt.edu, and resolves to 136.142.8.172 — inside Pitt's own 136.142.0.0/16 address space, not a vendor's. The site footer reads "© 2026 University of Pittsburgh"; the published contact address is tycho@phdl.pitt.edu (Public Health Dynamics Laboratory, Pitt School of Public Health); and the API reference at https://www.tycho.pitt.edu/dataset/api/ is served from the same host. No vendor host, vendor contact, vendor terms or shared-platform fingerprint appears anywhere on the surface, and no other institution in the university cohort ships this contract. Probed 2026-08-30 — every path under /api/ answers HTTP 200.
+  x-provenance:
+    generated: '2026-08-30'
+    method: derived
+    source: Derived from the published API reference at https://www.tycho.pitt.edu/dataset/api/ (fetched 2026-08-30, HTTP 200, 31,978 bytes), which names every path, its returned variables, its filter parameters and its paging parameters, reconciled against live keyless probes of all fourteen documented paths on 2026-08-30.
+    authorship: Written by API Evangelist, not published by the University of Pittsburgh. No machine-readable contract for this API was found — https://www.tycho.pitt.edu/api/openapi.json, /api/openapi.yaml and /api/swagger.json are not published, and the university operates no developer portal (developer.pitt.edu and apis.pitt.edu do not resolve).
+    coverage: All fourteen paths named in the published reference are modelled. Response bodies are CSV and could not be captured without a key, so response schemas describe the documented column sets rather than observed payloads, and are marked as such per operation. The full set of filterable variables on /query is the Project Tycho Pre-compiled Data Format v1.0 variable list; the documented subset is enumerated here and the remainder is described but not enumerated rather than guessed.
+    limitation: 'Path existence could NOT be confirmed by probe. The API evaluates the key before it routes: https://www.tycho.pitt.edu/api/nonsensepath?apikey=INVALIDKEY returns exactly the same HTTP 200 "Invalid API key" body as every documented path. The path list here therefore rests on the published documentation alone.'
+servers:
+- url: https://www.tycho.pitt.edu/api
+  description: Production — Project Tycho API, operated by the University of Pittsburgh
+security:
+- ProjectTychoApiKey: []
+tags:
+- name: Data
+  description: Filtered retrieval of Project Tycho surveillance rows.
+paths:
+  /query:
+    get:
+      tags:
+      - Data
+      operationId: querySurveillanceData
+      summary: Query surveillance data
+      description: Returns a filtered subset of Project Tycho surveillance rows in the Project Tycho Pre-compiled Data Format version 1.0, as CSV. Every call MUST specify both a condition and a location. The condition is given as one of ConditionName or ConditionSNOMED; the location is given as at least one of CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name or CityName. Any remaining variable in the data format may be added as an optional filter. Date ranges use PeriodStartDate and PeriodEndDate with the operators =, >= and <=, and dates must be formatted YYYY-MM-DD. Variable names are case-sensitive and must match the case used in the data format column headings.
+      parameters:
+      - $ref: '#/components/parameters/ApiKey'
+      - name: ConditionName
+        in: query
+        required: false
+        description: Required unless ConditionSNOMED is supplied. Case-sensitive exact match, e.g. `Measles`.
+        schema:
+          type: string
+      - name: ConditionSNOMED
+        in: query
+        required: false
+        description: Required unless ConditionName is supplied. SNOMED CT concept id for the condition.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/CountryISO'
+      - $ref: '#/components/parameters/CountryName'
+      - $ref: '#/components/parameters/Admin1ISO'
+      - $ref: '#/components/parameters/Admin1Name'
+      - $ref: '#/components/parameters/Admin2Name'
+      - $ref: '#/components/parameters/CityName'
+      - name: PeriodStartDate
+        in: query
+        required: false
+        description: Reporting-period start, YYYY-MM-DD. The documented operators are `=`, `>=` and `<=`; the operator is written into the query string itself (PeriodStartDate>=2000-01-01) rather than passed as a separate parameter.
+        schema:
+          type: string
+          format: date
+      - name: PeriodEndDate
+        in: query
+        required: false
+        description: Reporting-period end, YYYY-MM-DD. Same operator convention as PeriodStartDate.
+        schema:
+          type: string
+          format: date
+      - name: Fatalities
+        in: query
+        required: false
+        description: Restrict to fatality (1) or non-fatality (0) counts.
+        schema:
+          type: string
+          enum:
+          - '0'
+          - '1'
+      - name: PartOfCumulativeCountSeries
+        in: query
+        required: false
+        description: Restrict to rows that are (1) or are not (0) part of a cumulative count series.
+        schema:
+          type: string
+          enum:
+          - '0'
+          - '1'
+      - name: SourceName
+        in: query
+        required: false
+        description: Restrict to rows attributed to one reporting source.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Rows of results to retrieve. Default 5000, maximum 20000.
+        schema:
+          type: integer
+          default: 5000
+          maximum: 20000
+          minimum: 1
+      - name: offset
+        in: query
+        required: false
+        description: Row offset for paging. With limit=5000, offset=5000 returns results starting at row 5001. An offset past the end of the result set returns the literal text "No results".
+        schema:
+          type: integer
+          minimum: 0
+      responses:
+        '200':
+          $ref: '#/components/responses/TychoDataCsv'
+components:
+  schemas:
+    TychoDataRow:
+      type: object
+      description: One surveillance row in the Project Tycho Pre-compiled Data Format version 1.0. The columns below are those the published API reference names explicitly as filterable or returned; the format carries further columns that the reference does not enumerate, and they are deliberately absent here rather than guessed.
+      properties:
+        ConditionName:
+          type: string
+        ConditionSNOMED:
+          type: string
+        PathogenName:
+          type: string
+        PathogenTaxonID:
+          type: string
+        CountryISO:
+          type: string
+        CountryName:
+          type: string
+        Admin1ISO:
+          type: string
+        Admin1Name:
+          type: string
+        Admin2Name:
+          type: string
+        CityName:
+          type: string
+        PeriodStartDate:
+          type: string
+          format: date
+        PeriodEndDate:
+          type: string
+          format: date
+        PartOfCumulativeCountSeries:
+          type: string
+          enum:
+          - '0'
+          - '1'
+        AgeRange:
+          type: string
+        Subpopulation:
+          type: string
+        PlaceOfAcqusition:
+          type: string
+          description: Misspelled in Project Tycho's own data format; reproduced verbatim.
+        DiagnosisCertainty:
+          type: string
+        SourceName:
+          type: string
+        Fatalities:
+          type: string
+          enum:
+          - '0'
+          - '1'
+  parameters:
+    Admin1ISO:
+      name: Admin1ISO
+      in: query
+      required: false
+      description: Case-sensitive exact match on ISO 3166-2 subdivision code, e.g. `US-PA`.
+      schema:
+        type: string
+    Admin2Name:
+      name: Admin2Name
+      in: query
+      required: false
+      description: Case-sensitive exact match on second-level division name (US county or equivalent).
+      schema:
+        type: string
+    CountryName:
+      name: CountryName
+      in: query
+      required: false
+      description: Case-sensitive exact match on country name, e.g. `UNITED STATES OF AMERICA`.
+      schema:
+        type: string
+    CityName:
+      name: CityName
+      in: query
+      required: false
+      description: Case-sensitive exact match on city name.
+      schema:
+        type: string
+    Admin1Name:
+      name: Admin1Name
+      in: query
+      required: false
+      description: Case-sensitive exact match on first-level division name, e.g. `Pennsylvania`.
+      schema:
+        type: string
+    ApiKey:
+      name: apikey
+      in: query
+      required: true
+      description: Project Tycho API key. Required on every request; evaluated before routing.
+      schema:
+        type: string
+    CountryISO:
+      name: CountryISO
+      in: query
+      required: false
+      description: Case-sensitive exact match on ISO 3166-1 alpha-2 country code, e.g. `US`.
+      schema:
+        type: string
+  responses:
+    TychoDataCsv:
+      description: CSV in the Project Tycho Pre-compiled Data Format version 1.0. An offset past the end of the result set returns the literal text "No results" rather than an empty CSV body.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/TychoDataRow'
+  securitySchemes:
+    ProjectTychoApiKey:
+      type: apiKey
+      in: query
+      name: apikey
+      description: A free API key, obtained from the Profile page after registering an account at https://www.tycho.pitt.edu. The key travels in the query string on every request, which means it is written into server access logs, browser history, referrer headers and any intermediary cache. Project Tycho offers no header-based alternative.

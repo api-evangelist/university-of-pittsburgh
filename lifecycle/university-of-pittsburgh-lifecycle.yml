@@ -1,0 +1,137 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of every surface attributed to the University of Pittsburgh, plus the
+  published API reference at https://www.tycho.pitt.edu/dataset/api/ and the ULS GitHub
+  organization at https://github.com/ulsdevteam.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+summary:
+  versioned_surfaces: 2
+  surfaces_with_a_published_changelog: 0
+  surfaces_with_a_published_deprecation_policy: 0
+  surfaces_with_a_status_page: 0
+  institution_status_page_covering_apis: false
+apis:
+- aid: university-of-pittsburgh:project-tycho
+  operator: institution
+  versioning:
+    scheme: data-format version, not API version
+    current: Project Tycho Pre-compiled Data Format version 1.0
+    in_url: false
+    in_header: false
+    note: >-
+      The API itself carries no version. What is versioned is the data format the API returns, and
+      separately the repository's own content releases — version 1.0 in 2013, version 2.0 in 2017,
+      per https://www.tycho.pitt.edu/about/. A client has no way to detect an API change, and the
+      base path is /api with no version segment.
+  changelog: none
+  changelog_note: No changelog, release notes or "what's new" page was found on www.tycho.pitt.edu.
+  deprecation_policy: none
+  sunset_header: false
+  status_page: none
+  evidence:
+    url: https://www.tycho.pitt.edu/dataset/api/
+    status: 200
+- aid: university-of-pittsburgh:wprdc-ckan
+  operator: institution
+  versioning:
+    scheme: CKAN Action API major version in the path
+    current: '3'
+    in_url: true
+    note: >-
+      /api/3/action/* is CKAN's own versioning convention, not the University of Pittsburgh's. The
+      running software is CKAN 2.11.6, reported by /api/3/action/status_show, with the local
+      extension `wprdctheme` alongside eleven standard CKAN extensions — evidence of a locally
+      operated and locally customised deployment rather than a hosted tenancy.
+  changelog: none
+  changelog_note: >-
+    WPRDC publishes dataset-level update cadence per package but no changelog for the API itself.
+  deprecation_policy: none
+  sunset_header: false
+  status_page: none
+  evidence:
+    url: https://data.wprdc.org/api/3/action/status_show
+    status: 200
+- aid: university-of-pittsburgh:uls-ejournal-oai
+  operator: institution
+  versioning:
+    scheme: OAI-PMH protocol version
+    current: '2.0'
+    in_url: false
+    note: >-
+      protocolVersion 2.0 is reported in every Identify response. This is the protocol's version,
+      not the service's; the underlying PKP OJS release is not advertised on the public surface.
+  changelog: none
+  changelog_note: >-
+    No changelog on the journal hosts. The nearest thing is the public commit history of the ULS
+    plugins at https://github.com/ulsdevteam, which is real engineering history but is not a
+    consumer-facing changelog for the OAI-PMH service.
+  deprecation_policy: none
+  sunset_header: false
+  status_page: none
+  evidence:
+    url: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=Identify
+    status: 200
+- aid: university-of-pittsburgh:d-scholarship-oai
+  operator: tenant
+  vendor: Hyku Commons (Samvera Hyku)
+  versioning:
+    scheme: OAI-PMH protocol version
+    current: '2.0'
+    in_url: false
+    note: >-
+      The one surface in this profile that carries a visible migration boundary. Its earliestDatestamp
+      is 2026-01-26T21:08:39Z — not the age of the repository's content but the age of the current
+      platform, because D-Scholarship moved from EPrints to Hyku Commons this year. A harvester with
+      a resumption state from before the migration has no way to learn that from the protocol, and
+      the old /cgi/oai2 base URL now returns HTTP 403 rather than a redirect or a deletion notice.
+  changelog: none
+  deprecation_policy: none
+  sunset_header: false
+  status_page: none
+  evidence:
+    url: https://d-scholarship.pitt.edu/catalog/oai?verb=Identify
+    status: 200
+- aid: university-of-pittsburgh:pitt-passport-idp
+  operator: institution
+  versioning:
+    scheme: SAML protocol versions advertised in metadata
+    current: >-
+      protocolSupportEnumeration urn:oasis:names:tc:SAML:2.0:protocol,
+      urn:oasis:names:tc:SAML:1.1:protocol, urn:mace:shibboleth:1.0
+    in_url: false
+    note: >-
+      The one surface with a machine-readable expiry: the InCommon MDQ copy of Pitt's entity
+      descriptor carries validUntil="2026-09-13T20:36:59Z", so relying parties are told when to
+      refresh. That is federation hygiene rather than API lifecycle management, but it is the only
+      published freshness signal anywhere in this profile.
+  changelog: none
+  deprecation_policy: none
+  sunset_header: false
+  status_page: none
+  evidence:
+    url: https://mdq.incommon.org/entities/https%3A%2F%2Fpassport.pitt.edu%2Fidp%2Fshibboleth
+    status: 200
+institution_wide:
+  status_page:
+    url: https://status.pitt.edu
+    status: 200
+    covers_apis: false
+    note: >-
+      "Pitt Digital Systems Status" is live and covers campus IT services. None of the four
+      institution-operated API surfaces in this profile appears on it — not Project Tycho, not
+      WPRDC, not the ULS journal platform, not D-Scholarship.
+  deprecation_policy: none
+  api_program: none
+  note: >-
+    There is no institution-wide API lifecycle discipline because there is no institution-wide API
+    program. No surface publishes a changelog, a deprecation policy or a Sunset header, and no
+    surface is covered by the status page the university does operate.

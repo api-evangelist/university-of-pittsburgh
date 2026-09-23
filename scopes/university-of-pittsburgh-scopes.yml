@@ -1,0 +1,49 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of every surface attributed to the University of Pittsburgh, plus the
+  published API reference at https://www.tycho.pitt.edu/dataset/api/.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+summary:
+  oauth_authorization_servers_operated_by_the_institution: 0
+  scoped_surfaces: 0
+  scopes_documented: 0
+scopes: []
+detail: >-
+  The University of Pittsburgh operates no OAuth 2.0 authorization server on a public surface and
+  publishes no scope model. There is nothing to enumerate here, and this file exists to say so
+  rather than to be filled.
+
+  Each institution-operated surface uses an all-or-nothing credential instead of scopes. Project
+  Tycho issues one API key per registered account, carried in the query string, granting the same
+  read access to every path; the published reference names no scope, permission or role. The WPRDC
+  CKAN Action API is anonymously readable with no credential and offers no public write path. The
+  University Library System's OAI-PMH providers are anonymously harvestable, and OAI-PMH has no
+  authorization model of its own. The OJS REST API alongside them is closed entirely — HTTP 403
+  api.403.unauthorized to any unauthenticated caller — behind a per-user token issued inside each
+  journal, not a scoped grant.
+
+  Pitt Passport (https://passport.pitt.edu/idp/shibboleth) is a SAML 2.0 identity provider, and SAML
+  attribute release is the nearest thing to a scope model the university publishes. It is not an
+  OAuth scope model and it governs attributes released to relying service providers, not access to
+  an API, so it is recorded in authentication/ rather than fabricated into a scope list here.
+probes:
+- url: https://www.pitt.edu/.well-known/oauth-authorization-server
+  status: 404
+- url: https://developer.pitt.edu
+  status: 0
+  note: Does not resolve.
+- url: https://apis.pitt.edu
+  status: 0
+  note: Does not resolve.
+- url: https://www.tycho.pitt.edu/dataset/api/
+  status: 200
+  note: The full published API reference; contains no scope, role or permission vocabulary.

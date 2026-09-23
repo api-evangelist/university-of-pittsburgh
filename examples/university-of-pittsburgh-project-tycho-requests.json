@@ -1,0 +1,74 @@
+{
+  "generated": "2026-08-30",
+  "method": "searched",
+  "source": "https://www.tycho.pitt.edu/dataset/api/ (HTTP 200, 2026-08-30) — the University of Pittsburgh's own published API reference. The request examples below are transcribed from that page; the response bodies are NOT included because every Project Tycho call requires an API key and API Evangelist holds none.",
+  "provider": "University of Pittsburgh",
+  "providerId": "university-of-pittsburgh",
+  "api": "university-of-pittsburgh:project-tycho",
+  "operator": "institution",
+  "baseURL": "https://www.tycho.pitt.edu/api",
+  "authentication": "apikey query parameter, obtained free from the Profile page after registering at https://www.tycho.pitt.edu",
+  "examples": [
+    {
+      "name": "List every condition",
+      "request": "GET https://www.tycho.pitt.edu/api/condition?apikey=APIKEY",
+      "returns": "CSV — ConditionName, ConditionSNOMED",
+      "provenance": "documented"
+    },
+    {
+      "name": "Look up the SNOMED code for a known condition",
+      "request": "GET https://www.tycho.pitt.edu/api/condition?apikey=APIKEY&ConditionName=Measles",
+      "returns": "CSV — one row",
+      "provenance": "documented"
+    },
+    {
+      "name": "List first-level divisions of the United States",
+      "request": "GET https://www.tycho.pitt.edu/api/admin1?apikey=APIKEY&CountryISO=US",
+      "returns": "CSV — CountryISO, CountryName, Admin1ISO, Admin1Name",
+      "provenance": "documented"
+    },
+    {
+      "name": "Measles counts in Pennsylvania, excluding cumulative series and fatalities",
+      "request": "GET https://www.tycho.pitt.edu/api/query?apikey=APIKEY&ConditionName=Measles&CountryISO=US&Admin1ISO=US-PA&Fatalities=0&PartOfCumulativeCountSeries=0",
+      "returns": "CSV in Project Tycho Pre-compiled Data Format v1.0, first 5000 rows",
+      "provenance": "documented"
+    },
+    {
+      "name": "Page 2 of the same query",
+      "request": "GET https://www.tycho.pitt.edu/api/query?apikey=APIKEY&ConditionName=Measles&CountryISO=US&Admin1ISO=US-PA&Fatalities=0&PartOfCumulativeCountSeries=0&offset=5000",
+      "returns": "CSV, rows 5001-10000. An offset past the end returns the literal text \"No results\".",
+      "provenance": "documented"
+    },
+    {
+      "name": "Dengue in Laos over a date range",
+      "request": "GET https://www.tycho.pitt.edu/api/query?apikey=APIKEY&ConditionName=Dengue&CountryName=LAO%20PEOPLE'S%20DEMOCRATIC%20REPUBLIC&PeriodStartDate>=2000-01-01&PeriodEndDate<=2003-12-31",
+      "returns": "CSV. Note that the comparison operator is written into the query string itself rather than passed as a separate parameter.",
+      "provenance": "documented"
+    },
+    {
+      "name": "Raise the page size to the documented maximum",
+      "request": "GET https://www.tycho.pitt.edu/api/query?apikey=APIKEY&ConditionName=Measles&CountryISO=US&Admin1ISO=US-NY&Fatalities=0&limit=10000",
+      "returns": "CSV, first 10000 rows. Default limit is 5000, maximum 20000.",
+      "provenance": "documented"
+    }
+  ],
+  "observed_responses": [
+    {
+      "name": "Rejected credential",
+      "request": "GET https://www.tycho.pitt.edu/api/condition?apikey=INVALIDKEY",
+      "status": 200,
+      "content_type": "text/html",
+      "body": "Invalid API key. Please see the <a href=\"/dataset/api\">API Help</a> (https://www.tycho.pitt.edu/dataset/api) for more information.",
+      "provenance": "probed 2026-08-30"
+    },
+    {
+      "name": "Rejected credential on a path that does not exist",
+      "request": "GET https://www.tycho.pitt.edu/api/nonsensepath?apikey=INVALIDKEY",
+      "status": 200,
+      "content_type": "text/html",
+      "body": "Invalid API key. Please see the <a href=\"/dataset/api\">API Help</a> (https://www.tycho.pitt.edu/dataset/api) for more information.",
+      "provenance": "probed 2026-08-30",
+      "note": "Byte-identical to the previous response. The key is evaluated before the path is routed, so no path in this API can be confirmed to exist without a credential — which is why the OpenAPI in this repository rests on the published documentation rather than on probes."
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+---
+# authorship: API Evangelist tooling. Not published by the University of Pittsburgh.
+x-generated: '2026-08-30'
+x-method: derived
+x-source: >-
+  openapi/university-of-pittsburgh-project-tycho-api-openapi.yml, plus live probes on 2026-08-30 of
+  https://www.tycho.pitt.edu/api, https://data.wprdc.org/api/3/action,
+  https://anthro-age.pitt.edu/ojs/anthro-age/oai and https://passport.pitt.edu/idp/shibboleth.
+# Spectral ruleset encoding the conventions actually observed across the surfaces the University
+# of Pittsburgh itself operates: Project Tycho (www.tycho.pitt.edu, Public Health Dynamics
+# Laboratory), the WPRDC open data portal (data.wprdc.org, UCSUR), the University Library System's
+# OAI-PMH providers, and Pitt Passport (passport.pitt.edu).
+#
+# The dominant real finding these rules encode: Project Tycho returns an authentication failure
+# with HTTP 200 and an HTML sentence, and evaluates the key BEFORE routing the path, so a bad path
+# and a bad key are indistinguishable. Anything built against a Pitt surface must validate the
+# body, not the status line — and must not assume a path exists because it answered 200.
+#
+# The second finding: Pitt operates no institution-wide API program, so nothing here can be
+# enforced across surfaces by the university itself. These rules are for anyone modelling a Pitt
+# surface, including us.
+extends: [[spectral:oas, off]]
+formats:
+  - oas3
+rules:
+  pitt-info-operator:
+    description: >-
+      Every spec in a University of Pittsburgh repo must declare info.x-operator, because most
+      surfaces that look like a university's are a vendor's.
+    severity: error
+    given: $.info
+    then:
+      field: x-operator
+      function: truthy
+  pitt-info-operator-evidence:
+    description: An x-operator claim must carry the evidence that settled it.
+    severity: error
+    given: $.info
+    then:
+      field: x-operator-evidence
+      function: truthy
+  pitt-info-provenance:
+    description: >-
+      Every spec must carry x-provenance. Pitt publishes no machine-readable contract for any of
+      its surfaces, so every OpenAPI in this repository was written by API Evangelist and must say so.
+    severity: error
+    given: $.info
+    then:
+      field: x-provenance
+      function: truthy
+  pitt-institutional-contact:
+    description: >-
+      Every Pitt-operated API should name the institutional unit that runs it — the surfaces are
+      owned by unrelated departments and the unit is the only thing that disambiguates them.
+    severity: warn
+    given: $.info
+    then:
+      field: contact
+      function: truthy
+  pitt-server-under-institution-domain:
+    description: >-
+      A server URL in this repo must sit under pitt.edu, or the surface must be recorded as a
+      tenancy instead. data.wprdc.org is the one deliberate exception and it is documented in
+      apis.yml with x-operator evidence.
+    severity: warn
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        match: '^https://[a-z0-9.-]*(pitt\.edu|wprdc\.org)'
+  pitt-no-vendor-host:
+    description: >-
+      No server in a University of Pittsburgh spec may point at a research-platform vendor. This is
+      the failure this pipeline exists to prevent: one figshare contract was credited to
+      twenty-five institutions in the June 2026 cohort.
+    severity: error
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '(figshare|elsevierpure|elsevier|exlibrisgroup|symplectic|dataverse|instructure|openrepository|bepress|digitalcommons)'
+  # Known deviation: ProjectTychoApiKey is apiKey/in:query and will trip this rule. That is
+  # intentional — the deviation is real and is documented in
+  # authentication/university-of-pittsburgh-authentication.yml, not waived here.
+  pitt-apikey-not-in-query:
+    description: >-
+      A credential should not travel in the query string. Project Tycho's apikey does, with no
+      header alternative, so it lands in access logs, browser history and Referer headers. Flagged
+      rather than silently modelled.
+    severity: warn
+    given: $.components.securitySchemes[?(@.type=='apiKey')].in
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '^query$'
+  pitt-error-responses-declared:
+    description: >-
+      Every operation should declare a non-2xx response. None of Pitt's surfaces publishes an error
+      reference, and Project Tycho serves its only error with HTTP 200 — so an operation that
+      declares nothing but 200 is describing the API accurately and this stays a warning, not an error.
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete].responses
+    then:
+      function: length
+      functionOptions:
+        min: 1
+  pitt-operation-id:
+    description: Every operation needs an operationId so agents and generators can address it.
+    severity: error
+    given: $.paths[*][get,post,put,patch,delete]
+    then:
+      field: operationId
+      function: truthy
+  pitt-operation-description:
+    description: >-
+      Every operation needs a description. Pitt's own reference is prose-only, so the description is
+      where the semantics that would otherwise be lost have to live.
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete]
+    then:
+      field: description
+      function: truthy

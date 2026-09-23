@@ -1,0 +1,211 @@
+# authorship: API Evangelist. Not published by the University of Pittsburgh.
+x-method: derived
+x-authorship: >-
+  Written by API Evangelist from live probes of the University of Pittsburgh's own public
+  surfaces. Pitt publishes no equivalent document. The `method:` key below is the university
+  pipeline's provenance vocabulary (how we came to hold the facts); x-method above is the
+  authorship vocabulary the provenance manifest reads (who wrote the file).
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes of University of Pittsburgh hosts on 2026-08-30, run as part of the API Evangelist
+  university pipeline. Every hit below points at the exact URL that returned the evidence; no
+  conformance is recorded from a prose claim, and each carries the operator of the surface that
+  satisfies it.
+provider: University of Pittsburgh
+providerId: university-of-pittsburgh
+regime: education
+description: >-
+  Conformance of the University of Pittsburgh's machine-readable surfaces against the Kin Score
+  `education` regime standards (scim, lti, oneroster, ed-fi, caliper, qti, oai-pmh, shibboleth,
+  saml, orcid, datacite, crossref). Reward-only: an entry under not_found means "not found on a
+  public surface on 2026-08-30", not "not in use internally". Operator is recorded per standard,
+  because for a university the same standard can be satisfied by the institution's own engineering
+  or by a vendor's product running under an institutional hostname, and those are not the same fact.
+standards:
+- id: oai-pmh
+  status: conformant
+  operator: institution
+  evidence:
+    url: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=Identify
+    status: 200
+    content_type: text/xml
+    detail: >-
+      A conformant OAI-PMH 2.0 provider on the University of Pittsburgh's own infrastructure,
+      part of the University Library System's E-Journal Publishing program. Identify returns
+      repositoryName "Anthropology & Aging", baseURL
+      https://anthro-age.pitt.edu/ojs/anthro-age/oai, protocolVersion 2.0, adminEmail
+      anthro-age@mail.pitt.edu, earliestDatestamp 2016-12-20T15:38:13Z, deletedRecord "persistent",
+      granularity YYYY-MM-DDThh:mm:ssZ, compression gzip. The host is a pitt.edu subdomain and the
+      software is PKP Open Journal Systems self-hosted by ULS — the ulsdevteam GitHub organization
+      ("University of Pittsburgh - University Library System", 299 public repositories) is full of
+      OJS/PKP plugins ULS itself wrote (pkp-oauth, pkp-clamav, pkp-betterPassword, pkp-sitesearch,
+      pkp-formHoneypot, pkp-akismet, ojs-plum-plugin, inlineHtmlGalley).
+  additional_evidence:
+  - url: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=ListMetadataFormats
+    status: 200
+    note: Advertises four metadata prefixes — rfc1807, oai_dc, oai_marc, marcxml.
+  - url: https://anthro-age.pitt.edu/ojs/anthro-age/oai?verb=ListRecords&metadataPrefix=oai_dc
+    status: 200
+    note: Returns real records — 218,099 bytes of oai_dc on 2026-08-30, not an empty provider.
+  - url: https://jwsr.pitt.edu/ojs/jwsr/oai?verb=Identify
+    status: 200
+    note: >-
+      Second provider, repositoryName "Journal of World-Systems Research". Confirms this is a
+      platform-wide capability rather than one journal's configuration.
+  - url: https://jmla.pitt.edu/ojs/jmla/oai?verb=Identify
+    status: 200
+    note: Third provider — Journal of the Medical Library Association.
+  - url: https://cinej.pitt.edu/ojs/cinej/oai?verb=Identify
+    status: 200
+    note: Fourth provider — CINEJ Cinema Journal.
+  - url: https://d-scholarship.pitt.edu/catalog/oai?verb=Identify
+    status: 200
+    operator: tenant
+    note: >-
+      A second, separate OAI-PMH 2.0 provider — D-Scholarship@Pitt, the ULS institutional
+      repository — recorded here with operator `tenant`, not `institution`. Identify returns
+      repositoryName "pittir", repositoryIdentifier "hyku", adminEmail d-scholarship@mail.pitt.edu,
+      earliestDatestamp 2026-01-26T21:08:39Z, and is served by blacklight_oai_provider.
+      d-scholarship.pitt.edu CNAMEs to pittir.hykucommons.org: the content and the DOIs are Pitt's,
+      the OAI implementation is Hyku's. ListMetadataFormats advertises oai_dc and oai_hyku;
+      ListRecords returned 80,753 bytes of real records on 2026-08-30. Supporting evidence only —
+      the conformant verdict above rests on the institution-operated ULS journal providers.
+  - url: https://d-scholarship.pitt.edu/cgi/oai2?verb=Identify
+    status: 403
+    note: >-
+      The stale pre-migration EPrints path, still returning HTTP 403 behind a Cloudflare "Just a
+      moment..." challenge to automated clients including one sending a full browser User-Agent and
+      navigation headers. This is the endpoint the June 2026 profile recorded for D-Scholarship, and
+      reporting it as bot protection rather than as a dead path was the error: the live endpoint is
+      /catalog/oai, one path away, and it answers 200.
+- id: shibboleth
+  status: conformant
+  operator: institution
+  evidence:
+    url: https://passport.pitt.edu/idp/shibboleth
+    status: 200
+    content_type: application/xml
+    detail: >-
+      Pitt Passport publishes SAML 2.0 metadata at the canonical Shibboleth /idp/shibboleth
+      location on a pitt.edu host. The document is an <EntityDescriptor> with
+      entityID="https://passport.pitt.edu/idp/shibboleth" carrying the shibmd
+      (urn:mace:shibboleth:metadata:1.0) namespace, which identifies the implementation as
+      Shibboleth specifically rather than SAML generically. Its <shibmd:Scope regexp="false">
+      asserts the scope `pitt.edu`; its mdui:DisplayName is "Pitt Passport Login Service" and its
+      mdui:Description is "Pitt production IdP at passport.pitt.edu". An institution-operated
+      surface by definition — no vendor sits between Pitt and this metadata.
+- id: saml
+  status: conformant
+  operator: institution
+  evidence:
+    url: https://mdq.incommon.org/entities/https%3A%2F%2Fpassport.pitt.edu%2Fidp%2Fshibboleth
+    status: 200
+    content_type: application/samlmetadata+xml
+    detail: >-
+      The University of Pittsburgh's identity provider is a registered InCommon — and thereby
+      eduGAIN — entity. The InCommon MDQ service returns a signed SAML 2.0 EntityDescriptor
+      (9,212 bytes, XML-DSig rsa-sha256, validUntil 2026-09-13T20:36:59Z) for entityID
+      https://passport.pitt.edu/idp/shibboleth. Federation membership is an institution-operated
+      fact; the metadata is served by InCommon but it describes and is signed over Pitt's own
+      entity, which is why this is recorded with operator `institution` rather than `vendor`.
+- id: datacite
+  status: conformant
+  operator: institution
+  evidence:
+    url: https://api.datacite.org/clients/pitt.uls
+    status: 200
+    content_type: application/vnd.api+json
+    detail: >-
+      The University Library System, University of Pittsburgh is a registered, active DataCite
+      repository — client id pitt.uls, symbol PITT.ULS, clientType "repository", registered 2019,
+      isActive true — with its repository URL pointing at d-scholarship.pitt.edu. Pitt mints
+      DataCite persistent identifiers for content Pitt itself hosts.
+  additional_evidence:
+  - url: https://api.datacite.org/clients/pitt.cadb
+    status: 200
+    note: >-
+      A second Pitt DataCite repository: PITT.CADB, "The Comparative Archaeology Database of the
+      University of Pittsburgh Center for Comparative Archaeology", url https://www.cadb.pitt.edu/
+      — itself a live institution-operated research database (HTTP 200, title "COMPARATIVE
+      ARCHAEOLOGY DATABASE", 2026-08-30).
+  - url: https://api.datacite.org/clients?query=pittsburgh
+    status: 200
+    note: The DataCite client query returns exactly these two Pitt repositories and no others.
+- id: crossref
+  status: conformant
+  operator: institution
+  evidence:
+    url: https://api.crossref.org/members/3176
+    status: 200
+    content_type: application/json
+    detail: >-
+      "University Library System, University of Pittsburgh" is Crossref member 3176, holding DOI
+      prefix 10.5195, with 14,470 registered works as of 2026-08-30. The DOIs resolve to Pitt's own
+      hosts — 10.5195/aa.2025.575 redirects to https://anthro-age.pitt.edu/ojs/anthro-age/article/view/575
+      — so this is Pitt registering persistent identifiers for content Pitt itself publishes and
+      serves, not a vendor platform registering on Pitt's behalf.
+  additional_evidence:
+  - url: https://api.crossref.org/members/7946
+    status: 200
+    note: >-
+      A second Pitt Crossref member, "University of Pittsburgh Library", prefix 10.18117.
+  - url: https://api.crossref.org/works?filter=member:3176&rows=200
+    status: 200
+    note: >-
+      A 200-work sample resolves to eleven distinct pitt.edu OJS journal hosts — ans-names,
+      anthro-age, biblios, cinej, contemporaneity, dpj, ehe, jmla, jwsr, pimr and
+      radicalteacher.library — confirming an institution-run publishing platform rather than a
+      single journal.
+not_found:
+- id: lti
+  reason: >-
+    No LTI 1.3 / LTI Advantage JWKS or platform configuration was found on a pitt.edu host. Pitt's
+    learning management system is Canvas (Instructure); no institution-operated LTI surface and no
+    Pitt-named LTI endpoint was reachable on 2026-08-30.
+- id: scim
+  reason: >-
+    No SCIM 2.0 ServiceProviderConfig, /scim/v2 endpoint or published SCIM documentation was found
+    on any pitt.edu host. Pitt operates identity federation (SAML) publicly; provisioning, if it
+    exists, is not a public surface.
+- id: oneroster
+  reason: No IMS Global / 1EdTech OneRoster endpoint or conformance claim found on a public Pitt surface.
+- id: ed-fi
+  reason: >-
+    Ed-Fi is a K-12 data standard and was not expected here; no Ed-Fi ODS or API was found, as
+    anticipated for a research university.
+- id: caliper
+  reason: No IMS Caliper Analytics endpoint or event store found on a public Pitt surface.
+- id: qti
+  reason: No QTI assessment content or QTI-conformant service found on a public Pitt surface.
+- id: orcid
+  reason: >-
+    No ORCID member API integration, ORCID OAuth client or public ORCID conformance statement was
+    found on a pitt.edu host. D-Scholarship@Pitt's OAI-PMH records were readable at /catalog/oai on
+    2026-08-30 and no ORCID identifier surfaced in the oai_dc output sampled; recorded as not found
+    rather than absent, since oai_dc has no ORCID field and the richer oai_hyku prefix was not
+    sampled exhaustively.
+caveats:
+- >-
+  The shibboleth and saml verdicts rest on Pitt Passport, whose operator is contested. The cohort
+  audit run with --resolve grades passport.pitt.edu a tenant because it CNAMEs to
+  pitt.idaccessmanage.com; every self-description in the metadata — entityID, OrganizationName, all
+  four contacts, the asserted scope, the InCommon registration — is Pitt's. The standards are
+  satisfied either way; whether the engineering behind them is Pitt's own is the open question, and
+  it is recorded in apis.yml under that surface's x-operator-caveat.
+- >-
+  Three of the five conformant verdicts (datacite, crossref, and the OAI-PMH platform breadth) rest
+  in part on third-party registries — DataCite's and Crossref's own APIs. Those registries are the
+  authoritative record of institutional membership, and the operator recorded is the institution
+  because the registered entity is Pitt's, but the registry host itself is not Pitt's.
+- >-
+  The datacite verdict is recorded with operator `institution` even though the repository the
+  PITT.ULS account points at — d-scholarship.pitt.edu — is now a Hyku Commons tenancy. The DataCite
+  account, the prefix and the minting decisions are Pitt's; the platform the DOIs resolve into is
+  not. The standard is satisfied by Pitt; the software satisfying it is a vendor's.
+- >-
+  d-scholarship.pitt.edu is partially unreadable, and the pattern matters. Its root and
+  /information.html return HTTP 403 with a Cloudflare "Just a moment..." challenge to every probe,
+  including ones carrying a full browser User-Agent, Accept, Accept-Language and Sec-Fetch-* header
+  set — but /catalog/oai answers 200 with real OAI-PMH. The machine door is open while the front
+  door is closed to machines.
