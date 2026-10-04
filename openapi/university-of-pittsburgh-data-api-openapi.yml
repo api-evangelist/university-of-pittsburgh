@@ -129,25 +129,18 @@ components:
       description: Project Tycho API key. Required on every request; evaluated before routing.
       schema:
         type: string
-    CityName:
-      name: CityName
-      in: query
-      required: false
-      description: Case-sensitive exact match on city name.
-      schema:
-        type: string
-    Admin2Name:
-      name: Admin2Name
-      in: query
-      required: false
-      description: Case-sensitive exact match on second-level division name (US county or equivalent).
-      schema:
-        type: string
     Admin1ISO:
       name: Admin1ISO
       in: query
       required: false
       description: Case-sensitive exact match on ISO 3166-2 subdivision code, e.g. `US-PA`.
+      schema:
+        type: string
+    CityName:
+      name: CityName
+      in: query
+      required: false
+      description: Case-sensitive exact match on city name.
       schema:
         type: string
     CountryISO:
@@ -164,6 +157,20 @@ components:
       description: Case-sensitive exact match on first-level division name, e.g. `Pennsylvania`.
       schema:
         type: string
+    Admin2Name:
+      name: Admin2Name
+      in: query
+      required: false
+      description: Case-sensitive exact match on second-level division name (US county or equivalent).
+      schema:
+        type: string
+  responses:
+    TychoDataCsv:
+      description: CSV in the Project Tycho Pre-compiled Data Format version 1.0. An offset past the end of the result set returns the literal text "No results" rather than an empty CSV body.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/TychoDataRow'
   schemas:
     TychoDataRow:
       type: object
@@ -216,13 +223,6 @@ components:
           enum:
           - '0'
           - '1'
-  responses:
-    TychoDataCsv:
-      description: CSV in the Project Tycho Pre-compiled Data Format version 1.0. An offset past the end of the result set returns the literal text "No results" rather than an empty CSV body.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/TychoDataRow'
   securitySchemes:
     ProjectTychoApiKey:
       type: apiKey
