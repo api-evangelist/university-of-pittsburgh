@@ -238,6 +238,30 @@ paths:
           $ref: '#/components/responses/SingleColumnCsv'
 components:
   schemas:
+    PathogenRow:
+      type: object
+      description: One row of the /pathogen listing.
+      properties:
+        PathogenName:
+          type: string
+          description: Scientific name of the pathogen.
+        PathogenTaxonID:
+          type: string
+          description: NCBI Taxonomy identifier.
+    Admin1Row:
+      type: object
+      description: One row of the /admin1 listing.
+      properties:
+        CountryISO:
+          type: string
+        CountryName:
+          type: string
+        Admin1ISO:
+          type: string
+          description: ISO 3166-2 subdivision code
+          e.g. US-PA.: null
+        Admin1Name:
+          type: string
     Admin2Row:
       type: object
       description: One row of the /admin2 listing.
@@ -254,41 +278,6 @@ components:
           type: string
           description: Second-level division
           US county or equivalent.: null
-    Admin1Row:
-      type: object
-      description: One row of the /admin1 listing.
-      properties:
-        CountryISO:
-          type: string
-        CountryName:
-          type: string
-        Admin1ISO:
-          type: string
-          description: ISO 3166-2 subdivision code
-          e.g. US-PA.: null
-        Admin1Name:
-          type: string
-    PathogenRow:
-      type: object
-      description: One row of the /pathogen listing.
-      properties:
-        PathogenName:
-          type: string
-          description: Scientific name of the pathogen.
-        PathogenTaxonID:
-          type: string
-          description: NCBI Taxonomy identifier.
-    ConditionRow:
-      type: object
-      description: One row of the /condition listing.
-      properties:
-        ConditionName:
-          type: string
-          description: Human-readable condition name
-          e.g. Measles.: null
-        ConditionSNOMED:
-          type: string
-          description: SNOMED CT concept id for the condition.
     CityRow:
       type: object
       description: One row of the /city listing.
@@ -305,6 +294,17 @@ components:
           type: string
         CityName:
           type: string
+    ConditionRow:
+      type: object
+      description: One row of the /condition listing.
+      properties:
+        ConditionName:
+          type: string
+          description: Human-readable condition name
+          e.g. Measles.: null
+        ConditionSNOMED:
+          type: string
+          description: SNOMED CT concept id for the condition.
     CountryRow:
       type: object
       description: One row of the /country listing.
@@ -315,53 +315,14 @@ components:
         CountryName:
           type: string
           description: Country name as used by Project Tycho.
-  responses:
-    SingleColumnCsv:
-      description: CSV with a header row naming the single variable and one row per available value. The column name matches the variable named in the operation description.
-      content:
-        text/csv:
-          schema:
-            type: object
-            description: One CSV row carrying the single named variable.
-            additionalProperties:
-              type: string
-    CountryCsv:
-      description: CSV with a header row and the columns CountryISO, CountryName.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/CountryRow'
-    PathogenCsv:
-      description: CSV with a header row and the columns PathogenName, PathogenTaxonID.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/PathogenRow'
-    CityCsv:
-      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name, CityName.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/CityRow'
-    ConditionCsv:
-      description: CSV with a header row and the columns ConditionName, ConditionSNOMED.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/ConditionRow'
-    Admin2Csv:
-      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/Admin2Row'
-    Admin1Csv:
-      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name.
-      content:
-        text/csv:
-          schema:
-            $ref: '#/components/schemas/Admin1Row'
   parameters:
+    CityName:
+      name: CityName
+      in: query
+      required: false
+      description: Case-sensitive exact match on city name.
+      schema:
+        type: string
     Admin1ISO:
       name: Admin1ISO
       in: query
@@ -374,27 +335,6 @@ components:
       in: query
       required: false
       description: Case-sensitive exact match on second-level division name (US county or equivalent).
-      schema:
-        type: string
-    CountryName:
-      name: CountryName
-      in: query
-      required: false
-      description: Case-sensitive exact match on country name, e.g. `UNITED STATES OF AMERICA`.
-      schema:
-        type: string
-    CityName:
-      name: CityName
-      in: query
-      required: false
-      description: Case-sensitive exact match on city name.
-      schema:
-        type: string
-    CountryISO:
-      name: CountryISO
-      in: query
-      required: false
-      description: Case-sensitive exact match on ISO 3166-1 alpha-2 country code, e.g. `US`.
       schema:
         type: string
     ApiKey:
@@ -411,6 +351,66 @@ components:
       description: Case-sensitive exact match on first-level division name, e.g. `Pennsylvania`.
       schema:
         type: string
+    CountryName:
+      name: CountryName
+      in: query
+      required: false
+      description: Case-sensitive exact match on country name, e.g. `UNITED STATES OF AMERICA`.
+      schema:
+        type: string
+    CountryISO:
+      name: CountryISO
+      in: query
+      required: false
+      description: Case-sensitive exact match on ISO 3166-1 alpha-2 country code, e.g. `US`.
+      schema:
+        type: string
+  responses:
+    Admin1Csv:
+      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/Admin1Row'
+    SingleColumnCsv:
+      description: CSV with a header row naming the single variable and one row per available value. The column name matches the variable named in the operation description.
+      content:
+        text/csv:
+          schema:
+            type: object
+            description: One CSV row carrying the single named variable.
+            additionalProperties:
+              type: string
+    PathogenCsv:
+      description: CSV with a header row and the columns PathogenName, PathogenTaxonID.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/PathogenRow'
+    ConditionCsv:
+      description: CSV with a header row and the columns ConditionName, ConditionSNOMED.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/ConditionRow'
+    Admin2Csv:
+      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/Admin2Row'
+    CityCsv:
+      description: CSV with a header row and the columns CountryISO, CountryName, Admin1ISO, Admin1Name, Admin2Name, CityName.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/CityRow'
+    CountryCsv:
+      description: CSV with a header row and the columns CountryISO, CountryName.
+      content:
+        text/csv:
+          schema:
+            $ref: '#/components/schemas/CountryRow'
   securitySchemes:
     ProjectTychoApiKey:
       type: apiKey
